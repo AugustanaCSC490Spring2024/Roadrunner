@@ -71,7 +71,10 @@ export default function LoginScreen() {
             entering={FadeInUp.duration(1000).delay(400).springify()}
             className="w-full"
           >
-            <TouchableOpacity className="w-full bg-sky-400 p-3 rounded-2xl mb-3">
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Welcome")}
+              className="w-full bg-sky-400 p-3 rounded-2xl mb-3"
+            >
               <Text className="text-xl font bold text-white text-center">
                 Login
               </Text>
@@ -83,7 +86,7 @@ export default function LoginScreen() {
             className="flex-row justify-center"
           >
             <Text>Don't have an account? </Text>
-            <TouchableOpacity onPress={() => navigation.push("SignUp")}>
+            <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
               <Text className="text-sky-600">SignUp</Text>
             </TouchableOpacity>
           </Animated.View>

@@ -21,7 +21,6 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  path: "blog"
   # Build job
   build:
     runs-on: ubuntu-latest

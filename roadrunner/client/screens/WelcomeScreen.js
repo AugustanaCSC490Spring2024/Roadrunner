@@ -32,7 +32,7 @@ export default function WelcomeScreen() {
       </View>
       <View className="flex-row justify-center">
         <Image
-          source={require("../asset/images/welcome-robot.jpg")}
+          source={require("../asset/images/welcome_screen_bot.jpg")}
           className="w-72 h-72"
         />
       </View>

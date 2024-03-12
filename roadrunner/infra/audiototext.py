@@ -13,7 +13,7 @@ def audio_to_text(input_format, file_location, plain):
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
     # Load the desired model
-    model = whisper.load_model("medium.en").to(DEVICE)
+    model = whisper.load_model("small.en").to(DEVICE)
     file_path = Path(file_location)
     print(f"Transcribe from: {file_path}")
 

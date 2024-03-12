@@ -2,6 +2,8 @@
 name: Deploy to vercel on merge
 on:
   push:
+    paths:
+      - "blog/**"
     branches:
       - main
 jobs:
@@ -16,3 +18,8 @@ jobs:
           vercel-args: "--prod"
           vercel-org-id: ${{ secrets.ORG_ID}}
           vercel-project-id: ${{ secrets.PROJECT_ID}}
+
+permissions:
+  contents: write
+  deployments: write
+  pull-requests: write

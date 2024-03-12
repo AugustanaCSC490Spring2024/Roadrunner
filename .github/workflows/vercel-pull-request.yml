@@ -1,6 +1,8 @@
 name: Create vercel preview URL on pull request
 on:
   pull_request:
+    paths:
+      - "blog/**"
     branches:
       - main
 jobs:
@@ -18,3 +20,8 @@ jobs:
       - name: preview-url
         run: |
           echo ${{ steps.vercel-deploy.outputs.preview-url }}
+
+permissions:
+  contents: write
+  deployments: write
+  pull-requests: write

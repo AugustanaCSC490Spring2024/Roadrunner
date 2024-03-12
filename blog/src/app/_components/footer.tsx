@@ -6,7 +6,7 @@ export function Footer() {
       <Container>
         <div className="py-8 flex flex-col lg:flex-row items-center">
           <h3 className="text-2xl font-bold tracking-tighter leading-tight text-center lg:text-left mb-10 lg:mb-0 lg:pr-4 lg:w-1/2">
-            Built with ❤️ by the Roadrunner team
+            Built with ❤️ by the Roadrunner team.
           </h3>
           <div className="flex flex-col lg:flex-row justify-center items-center lg:pl-4 lg:w-1/2">
             <a

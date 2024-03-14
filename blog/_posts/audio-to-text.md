@@ -19,3 +19,5 @@ Noted that the Whisper AI package that I used was a "small.en" one.
 
 We have to figure out how to speed up the processing time when the audio file is much longer than 8 mins. Maybe a pre-processing inside the Raspberry PI 4?
 
+If you want to test out function, before running the test.py, you need to create a folder name audio inside the infra folder and put an audio file in there. Might want to edit the name of the path inside the test.py after that.
+

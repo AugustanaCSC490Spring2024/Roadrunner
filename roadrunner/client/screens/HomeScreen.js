@@ -24,11 +24,11 @@ export default function HomeScreen() {
 
   const clear = () => {
     setMessages([]);
-  }; 
+  };
 
   const stopSpeaking = () => {
     setSpeaking(false);
-  }
+  };
 
   return (
     <View className=" flex-1 bg-white">

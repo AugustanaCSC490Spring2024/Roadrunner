@@ -1,5 +1,5 @@
 from litellm import completion
-from prompts import summary_prompt
+from ..prompts import summary_prompt
 import os
 
 class LLMClient:

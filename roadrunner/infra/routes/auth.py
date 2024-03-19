@@ -1,6 +1,6 @@
 from flask import Blueprint, request
-from emailvalidator import user_validate_email
-from password_hash_algorithm import check_password_strength
+from ..utils.emailvalidator import user_validate_email
+from ..utils.password_hash_algorithm import check_password_strength
 
 auth = Blueprint('auth', __name__)
 

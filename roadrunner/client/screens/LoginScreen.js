@@ -72,7 +72,7 @@ export default function LoginScreen() {
             className="w-full"
           >
             <TouchableOpacity
-              onPress={() => navigation.navigate("Welcome")}
+              onPress={() => navigation.navigate("Home")}
               className="w-full bg-sky-400 p-3 rounded-2xl mb-3"
             >
               <Text className="text-xl font bold text-white text-center">

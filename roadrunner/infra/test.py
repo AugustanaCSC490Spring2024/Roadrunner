@@ -1,4 +1,4 @@
-from audiototext import audio_to_text
+from infra.models.audiototext import audio_to_text
 
 
 def main():

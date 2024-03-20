@@ -49,8 +49,7 @@ export default function SignUpScreen() {
 
         {/* form */}
         <View className="flex items-center mx-4 space-y-4">
-
-        <Animated.View
+          <Animated.View
             entering={FadeInUp.duration(1000).springify()}
             className="bg-black/5 p-5 rounded-2xl w-full"
           >

@@ -213,33 +213,37 @@ export default function HomeScreen() {
           </View>
         </TouchableOpacity>
       </Modal>
+
       {/* Settings Popup */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={settingsVisible}
-        onRequestClose={toggleSettingsPopup}
-      >
+      <Modal animationType="slide" transparent={true} visible={settingsVisible}>
         <View style={styles.settingsPopupContainer}>
           <View style={styles.settingsPopup}>
+            {/* Setting Header */}
+            <Text style={styles.settingHeader}>Settings</Text>
+            <View style={styles.separator} />
+            {/* Close button */}
+            <TouchableOpacity
+              onPress={toggleSettingsPopup}
+              style={styles.closeButton}
+            >
+              <Text style={styles.closeButtonText}>x</Text>
+            </TouchableOpacity>
+            {/* Theme Options */}
+            <TouchableOpacity
+              style={styles.option}
+              onPress={() => console.log("Theme Options clicked")}
+            >
+              <Text>Theme Options</Text>
+            </TouchableOpacity>
+            <View style={styles.separator} />
             {/* Archive all chats */}
             <TouchableOpacity style={styles.option} onPress={archiveAllChats}>
               <Text>Archive all chats</Text>
             </TouchableOpacity>
             <View style={styles.separator} />
-
             {/* Delete all chats */}
             <TouchableOpacity style={styles.option} onPress={deleteAllChats}>
               <Text>Delete all chats</Text>
-            </TouchableOpacity>
-            <View style={styles.separator} />
-
-            {/* Close */}
-            <TouchableOpacity
-              style={styles.option}
-              onPress={toggleSettingsPopup}
-            >
-              <Text>Close</Text>
             </TouchableOpacity>
           </View>
         </View>

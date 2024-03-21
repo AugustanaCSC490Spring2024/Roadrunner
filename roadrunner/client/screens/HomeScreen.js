@@ -19,11 +19,39 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
+const Prompt = ({ prompt, onPromptPress }) => {
+  return (
+    <TouchableOpacity
+      onPress={() => onPromptPress(prompt)}
+      style={styles.prompt}
+    >
+      <Text style={styles.promptText}>{prompt.text}</Text>
+    </TouchableOpacity>
+  );
+};
+
 export default function HomeScreen() {
   const [messages, setMessages] = useState([]); // State for messages
   const [inputText, setInputText] = useState(""); // State for input text
   const [sidebarVisible, setSidebarVisible] = useState(false); // State for sidebar visibility
   const scrollViewRef = useRef(); // Ref for ScrollView
+
+  // Static list of prompts
+  const [promptMessages] = useState([
+    {
+      key: "1",
+      text: "Fantasy team names",
+    },
+    {
+      key: "2",
+      text: "Python email script",
+    },
+    { key: "3", text: "Thank-you note to interviewer" },
+    {
+      key: "4",
+      text: "Thank-you note to babysitter",
+    },
+  ]);
 
   // Function to handle logout
   const handleLogout = () => {
@@ -58,6 +86,12 @@ export default function HomeScreen() {
     }
   };
 
+  // Function to handle prompt press
+  const handlePromptPress = (prompt) => {
+    setInputText(prompt.text);
+    sendMessage();
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
@@ -81,6 +115,15 @@ export default function HomeScreen() {
             scrollViewRef.current.scrollToEnd({ animated: true })
           }
         >
+          {/* Render prompts */}
+          {promptMessages.map((prompt, index) => (
+            <Prompt
+              key={index}
+              prompt={prompt}
+              onPromptPress={handlePromptPress}
+            />
+          ))}
+
           {/* Render messages */}
           {messages.map((message, index) => {
             return (
@@ -261,5 +304,24 @@ const styles = StyleSheet.create({
   },
   sidebarItemText: {
     fontSize: 18,
+  },
+  promptContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
+    paddingHorizontal: wp("5%"),
+    paddingBottom: hp("2%"),
+  },
+  prompt: {
+    backgroundColor: "#007bff",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+    marginBottom: 10,
+    width: wp("48%"), // Adjusted width to fit two prompts in a row with some spacing
+  },
+  promptText: {
+    color: "white",
+    textAlign: "center", // Center the text within the prompt
   },
 });

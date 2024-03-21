@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from llm import LLMClient
+from ..models.llm import LLMClient
 
 llm = Blueprint('llm', __name__)
 

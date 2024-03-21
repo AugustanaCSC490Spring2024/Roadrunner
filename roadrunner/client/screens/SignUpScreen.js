@@ -53,14 +53,22 @@ export default function SignUpScreen() {
             entering={FadeInUp.duration(1000).springify()}
             className="bg-black/5 p-5 rounded-2xl w-full"
           >
-            <TextInput placeholder="Username" placeholderTextColor={"gray"} />
+            <TextInput
+              name="Username"
+              placeholder="Username"
+              placeholderTextColor={"gray"}
+            />
           </Animated.View>
 
           <Animated.View
             entering={FadeInUp.duration(1000).delay(200).springify()}
             className="bg-black/5 p-5 rounded-2xl w-full"
           >
-            <TextInput placeholder="Email" placeholderTextColor={"gray"} />
+            <TextInput
+              name="Email"
+              placeholder="Email"
+              placeholderTextColor={"gray"}
+            />
           </Animated.View>
 
           <Animated.View
@@ -68,6 +76,7 @@ export default function SignUpScreen() {
             className="bg-black/5 p-5 rounded-2xl w-full mb-3"
           >
             <TextInput
+              name="Password"
               placeholder="Password"
               placeholderTextColor={"gray"}
               secureTextEntry

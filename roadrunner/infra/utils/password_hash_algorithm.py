@@ -10,9 +10,9 @@ policy = PasswordPolicy.from_names(
 )
 
 def hash_password(password):
-   password_bytes = password.encode('utf-8')
-   hash_object = hashlib.sha256(password_bytes)
-   return hash_object.hexdigest()
+    password_bytes = password.encode('utf-8')
+    hash_object = hashlib.sha256(password_bytes)
+    return hash_object.hexdigest()
 
 def check_password_strength(password):
     return PasswordStats(password).strength() >= 0.65

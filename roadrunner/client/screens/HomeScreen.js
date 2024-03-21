@@ -12,9 +12,12 @@ import {
   Modal,
 } from "react-native";
 
-import { Picker } from "@react-native-picker/picker";
 
 import { styles } from "../constants/styles";
+
+import Sidebar from "../components/sidebar";
+import Settings from "../components/settings";
+
 
 const Prompt = ({ prompt, onPromptPress }) => {
   return (
@@ -183,71 +186,23 @@ export default function HomeScreen() {
           <Text style={styles.sendButtonText}>Send</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
+
       {/* Sidebar */}
-      <Modal
-        animationType="slide"
-        transparent={true}
+      <Sidebar
         visible={sidebarVisible}
-        onRequestClose={() => setSidebarVisible(false)}
-      >
-        <TouchableOpacity
-          onPress={() => setSidebarVisible(false)} // Close sidebar
-          style={styles.sidebarContainer}
-        >
-          <View style={styles.sidebar}>
-            <TouchableOpacity
-              onPress={handleViewHistory}
-              style={styles.sidebarItem}
-            >
-              <Text style={styles.sidebarItemText}>View History</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={toggleSettingsPopup}
-              style={styles.sidebarItem}
-            >
-              <Text style={styles.sidebarItemText}>Setting</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleLogout} style={styles.sidebarItem}>
-              <Text style={styles.sidebarItemText}>Logout</Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-      </Modal>
+        onClose={() => setSidebarVisible(false)}
+        onViewHistory={handleViewHistory}
+        onSettings={toggleSettingsPopup}
+        onLogout={handleLogout}
+      />
 
       {/* Settings Popup */}
-      <Modal animationType="slide" transparent={true} visible={settingsVisible}>
-        <View style={styles.settingsPopupContainer}>
-          <View style={styles.settingsPopup}>
-            {/* Setting Header */}
-            <Text style={styles.settingHeader}>Settings</Text>
-            <View style={styles.separator} />
-            {/* Close button */}
-            <TouchableOpacity
-              onPress={toggleSettingsPopup}
-              style={styles.closeButton}
-            >
-              <Text style={styles.closeButtonText}>x</Text>
-            </TouchableOpacity>
-            {/* Theme Options */}
-            <TouchableOpacity
-              style={styles.option}
-              onPress={() => console.log("Theme Options clicked")}
-            >
-              <Text>Theme Options</Text>
-            </TouchableOpacity>
-            <View style={styles.separator} />
-            {/* Archive all chats */}
-            <TouchableOpacity style={styles.option} onPress={archiveAllChats}>
-              <Text>Archive all chats</Text>
-            </TouchableOpacity>
-            <View style={styles.separator} />
-            {/* Delete all chats */}
-            <TouchableOpacity style={styles.option} onPress={deleteAllChats}>
-              <Text>Delete all chats</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <Settings
+        visible={settingsVisible}
+        onClose={toggleSettingsPopup}
+        onArchiveChats={archiveAllChats}
+        onDeleteChats={deleteAllChats}
+      />
     </SafeAreaView>
   );
 }

@@ -7,38 +7,33 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  StyleSheet,
   KeyboardAvoidingView,
   Platform,
   Modal,
 } from "react-native";
 
-// Import responsive screen utilities
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+import { Picker } from "@react-native-picker/picker";
 
-import { styles, commonStyles } from "../constants/styles";
-
+import { styles } from "../constants/styles";
 
 const Prompt = ({ prompt, onPromptPress }) => {
   return (
     <TouchableOpacity
       onPress={() => onPromptPress(prompt)}
-      style={[styles.messageContainer, styles.prompt]}
+      style={[styles.messagesContainer, styles.prompt]}
     >
       <Text style={[styles.messageText, styles.promptText]}>{prompt.text}</Text>
     </TouchableOpacity>
   );
 };
 
-
 export default function HomeScreen() {
   const [messages, setMessages] = useState([]); // State for messages
   const [inputText, setInputText] = useState(""); // State for input text
   const [sidebarVisible, setSidebarVisible] = useState(false); // State for sidebar visibility
   const [showPrompts, setShowPrompts] = useState(true); // State for showing prompts
+  const [settingsVisible, setSettingsVisible] = useState(false); // State for settings popup visibility
+  const [theme, setTheme] = useState("light");
   const scrollViewRef = useRef(); // Ref for ScrollView
 
   // Static list of prompts
@@ -70,6 +65,15 @@ export default function HomeScreen() {
     setSidebarVisible(false); // Close sidebar after selecting an option
   };
 
+  // Dummy functions for archive and delete chats
+  const archiveAllChats = () => {
+    console.log("Archive all chats");
+  };
+
+  const deleteAllChats = () => {
+    console.log("Delete all chats");
+  };
+
   // Function to send message
   const sendMessage = () => {
     if (inputText.trim()) {
@@ -98,6 +102,12 @@ export default function HomeScreen() {
     setShowPrompts(false); // Hide prompts after one is clicked
   };
 
+  // Function to toggle settings popup visibility
+  const toggleSettingsPopup = () => {
+    setSettingsVisible(!settingsVisible);
+    setSidebarVisible(false); // Close sidebar
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
@@ -122,14 +132,14 @@ export default function HomeScreen() {
           }
         >
           {/*Render prompts if showPrompts is true */}
-          { showPrompts && 
-          promptMessages.map((prompt, index) => (
-            <Prompt
-              key={index}
-              prompt={prompt}
-              onPromptPress={handlePromptPress}
-            />
-          ))}
+          {showPrompts &&
+            promptMessages.map((prompt, index) => (
+              <Prompt
+                key={index}
+                prompt={prompt}
+                onPromptPress={handlePromptPress}
+              />
+            ))}
 
           {/* Render messages */}
           {messages.map((message, index) => {
@@ -157,7 +167,6 @@ export default function HomeScreen() {
           })}
         </ScrollView>
       </View>
-
       {/* Input area */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -174,7 +183,6 @@ export default function HomeScreen() {
           <Text style={styles.sendButtonText}>Send</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
-
       {/* Sidebar */}
       <Modal
         animationType="slide"
@@ -187,17 +195,54 @@ export default function HomeScreen() {
           style={styles.sidebarContainer}
         >
           <View style={styles.sidebar}>
-            <TouchableOpacity onPress={handleLogout} style={styles.sidebarItem}>
-              <Text style={styles.sidebarItemText}>Logout</Text>
-            </TouchableOpacity>
             <TouchableOpacity
               onPress={handleViewHistory}
               style={styles.sidebarItem}
             >
               <Text style={styles.sidebarItemText}>View History</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              onPress={toggleSettingsPopup}
+              style={styles.sidebarItem}
+            >
+              <Text style={styles.sidebarItemText}>Setting</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleLogout} style={styles.sidebarItem}>
+              <Text style={styles.sidebarItemText}>Logout</Text>
+            </TouchableOpacity>
           </View>
         </TouchableOpacity>
+      </Modal>
+      {/* Settings Popup */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={settingsVisible}
+        onRequestClose={toggleSettingsPopup}
+      >
+        <View style={styles.settingsPopupContainer}>
+          <View style={styles.settingsPopup}>
+            {/* Archive all chats */}
+            <TouchableOpacity style={styles.option} onPress={archiveAllChats}>
+              <Text>Archive all chats</Text>
+            </TouchableOpacity>
+            <View style={styles.separator} />
+
+            {/* Delete all chats */}
+            <TouchableOpacity style={styles.option} onPress={deleteAllChats}>
+              <Text>Delete all chats</Text>
+            </TouchableOpacity>
+            <View style={styles.separator} />
+
+            {/* Close */}
+            <TouchableOpacity
+              style={styles.option}
+              onPress={toggleSettingsPopup}
+            >
+              <Text>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </Modal>
     </SafeAreaView>
   );

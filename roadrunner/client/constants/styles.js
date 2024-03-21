@@ -133,5 +133,19 @@ export const styles = StyleSheet.create({
       color: "#000000", // Set text color to match input text color
       textAlign: "center", // Center the text within the prompt
     },
+
+    settingsPopupContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+    },
+    settingsPopup: {
+      backgroundColor: "#fff",
+      padding: 20,
+      borderRadius: 10,
+      width: "80%", // Adjust width as needed
+    },
+    
   });
   

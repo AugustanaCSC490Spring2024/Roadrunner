@@ -23,17 +23,19 @@ const Prompt = ({ prompt, onPromptPress }) => {
   return (
     <TouchableOpacity
       onPress={() => onPromptPress(prompt)}
-      style={styles.prompt}
+      style={[styles.messageContainer, styles.prompt]}
     >
-      <Text style={styles.promptText}>{prompt.text}</Text>
+      <Text style={[styles.messageText, styles.promptText]}>{prompt.text}</Text>
     </TouchableOpacity>
   );
 };
+
 
 export default function HomeScreen() {
   const [messages, setMessages] = useState([]); // State for messages
   const [inputText, setInputText] = useState(""); // State for input text
   const [sidebarVisible, setSidebarVisible] = useState(false); // State for sidebar visibility
+  const [showPrompts, setShowPrompts] = useState(true); // State for showing prompts
   const scrollViewRef = useRef(); // Ref for ScrollView
 
   // Static list of prompts
@@ -90,6 +92,7 @@ export default function HomeScreen() {
   const handlePromptPress = (prompt) => {
     setInputText(prompt.text);
     sendMessage();
+    setShowPrompts(false); // Hide prompts after one is clicked
   };
 
   return (
@@ -115,8 +118,9 @@ export default function HomeScreen() {
             scrollViewRef.current.scrollToEnd({ animated: true })
           }
         >
-          {/* Render prompts */}
-          {promptMessages.map((prompt, index) => (
+          {/*Render prompts if showPrompts is true */}
+          { showPrompts && 
+          promptMessages.map((prompt, index) => (
             <Prompt
               key={index}
               prompt={prompt}
@@ -313,15 +317,17 @@ const styles = StyleSheet.create({
     paddingBottom: hp("2%"),
   },
   prompt: {
-    backgroundColor: "#007bff",
-    paddingHorizontal: 20,
+    backgroundColor: "#FFFFFF", // Set background color to match input background
+    paddingHorizontal: 10, // Adjust padding to match input padding
     paddingVertical: 10,
-    borderRadius: 20,
+    borderRadius: 25, // Adjust border radius to match input border radius
     marginBottom: 10,
+    marginRight: 10,
     width: wp("48%"), // Adjusted width to fit two prompts in a row with some spacing
   },
   promptText: {
-    color: "white",
+    color: "#000000", // Set text color to match input text color
     textAlign: "center", // Center the text within the prompt
   },
+
 });

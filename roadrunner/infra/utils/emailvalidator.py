@@ -10,3 +10,4 @@ def user_validate_email(email):
     except EmailNotValidError as e:
         print(str(e))
         return None
+

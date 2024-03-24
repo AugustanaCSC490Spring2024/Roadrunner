@@ -10,7 +10,10 @@ const Sidebar = ({ visible, onClose, onViewHistory, onSettings, onLogout }) => {
       visible={visible}
       onRequestClose={onClose}
     >
-      <TouchableOpacity onPress={onClose} style={styles.sidebarContainer}>
+      <TouchableOpacity
+        style={styles.overlay} // Style for the transparent overlay
+        onPress={onClose} // Close the sidebar when overlay is pressed
+      >
         <View style={styles.sidebar}>
           <TouchableOpacity onPress={onViewHistory} style={styles.sidebarItem}>
             <Text style={styles.sidebarItemText}>View History</Text>

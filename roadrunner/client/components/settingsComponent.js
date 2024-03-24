@@ -4,7 +4,7 @@ import { styles } from "../constants/styles";
 
 const Settings = ({ visible, onClose, onArchiveChats, onDeleteChats }) => {
   return (
-    <Modal animationType="slide" transparent={true} visible={visible}>
+    <Modal visible={visible} onClose={onClose}>
       <View style={styles.settingsPopupContainer}>
         <View style={styles.settingsPopup}>
           <Text style={styles.settingHeader}>Settings</Text>

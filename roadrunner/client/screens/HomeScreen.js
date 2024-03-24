@@ -1,15 +1,11 @@
 import React, { useState, useRef } from "react";
 import {
   View,
-  Text,
   SafeAreaView,
   Image,
   ScrollView,
   TouchableOpacity,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  Modal,
+
 } from "react-native";
 
 import { styles } from "../constants/styles";
@@ -18,6 +14,7 @@ import Settings from "../components/settingsComponent";
 import Prompt from "../prompts/prompts";
 import Message from "../components/messageComponent";
 import InputArea from "../components/InputAreaComponent";
+
 
 export default function HomeScreen() {
   const [messages, setMessages] = useState([]); // State for messages
@@ -66,33 +63,32 @@ export default function HomeScreen() {
     console.log("Delete all chats");
   };
 
-// Function to send message
-const sendMessage = (messageContent) => {
-  if (messageContent && messageContent.trim()) { // Check if messageContent is defined and not empty before trimming
-    const newMessage = {
-      id: Date.now(),
-      role: "user",
-      content: messageContent.trim(),
-    };
-    setMessages([...messages, newMessage]);
-    setTimeout(() => {
-      const botMessage = {
-        id: Date.now() + 1,
-        role: "assistant",
-        content: "This is a simulated response.",
+  // Function to send message
+  const sendMessage = (messageContent) => {
+    if (messageContent && messageContent.trim()) {
+      // Check if messageContent is defined and not empty before trimming
+      const newMessage = {
+        id: Date.now(),
+        role: "user",
+        content: messageContent.trim(),
       };
-      setMessages((prevMessages) => [...prevMessages, botMessage]);
-    }, 1000); // Simulate a delay for bot response
-  }
-};
+      setMessages([...messages, newMessage]);
+      setTimeout(() => {
+        const botMessage = {
+          id: Date.now() + 1,
+          role: "assistant",
+          content: "This is a simulated response.",
+        };
+        setMessages((prevMessages) => [...prevMessages, botMessage]);
+      }, 1000); // Simulate a delay for bot response
+    }
+  };
 
-
-// Function to handle prompt press
-const handlePromptPress = (prompt) => {
-  sendMessage(prompt.text); // Pass prompt text to sendMessage function
-  setShowPrompts(false); // Hide prompts after one is clicked
-};
-
+  // Function to handle prompt press
+  const handlePromptPress = (prompt) => {
+    sendMessage(prompt.text); // Pass prompt text to sendMessage function
+    setShowPrompts(false); // Hide prompts after one is clicked
+  };
 
   // Function to toggle settings popup visibility
   const toggleSettingsPopup = () => {
@@ -146,7 +142,11 @@ const handlePromptPress = (prompt) => {
       </View>
 
       {/* Input area */}
-      <InputArea inputText={inputText} setInputText={setInputText} sendMessage={sendMessage} />
+      <InputArea
+        inputText={inputText}
+        setInputText={setInputText}
+        sendMessage={sendMessage}
+      />
 
       {/* Sidebar */}
       <Sidebar

@@ -13,9 +13,10 @@ import {
 } from "react-native";
 
 import { styles } from "../constants/styles";
-import Sidebar from "../components/sidebar";
-import Settings from "../components/settings";
+import Sidebar from "../components/sidebarComponent";
+import Settings from "../components/settingsComponent";
 import Prompt from "../prompts/prompts";
+import Message from "../components/messageComponent";
 
 export default function HomeScreen() {
   const [messages, setMessages] = useState([]); // State for messages
@@ -135,29 +136,9 @@ export default function HomeScreen() {
           </View>
 
           {/* Render messages */}
-          {messages.map((message, index) => {
-            return (
-              <View key={index}>
-                {message.role === "user" && (
-                  <View style={styles.userMessageContainer}>
-                    <Text style={styles.messageText}>{message.content}</Text>
-                  </View>
-                )}
-                {message.role === "assistant" && (
-                  <View style={styles.assistantMessageContainer}>
-                    {message.content.includes("https") ? (
-                      <Image
-                        source={{ uri: message.content }}
-                        style={styles.messageImage}
-                      />
-                    ) : (
-                      <Text style={styles.messageText}>{message.content}</Text>
-                    )}
-                  </View>
-                )}
-              </View>
-            );
-          })}
+          {messages.map((message, index) => (
+            <Message key={index} message={message} />
+          ))}
         </ScrollView>
       </View>
       {/* Input area */}

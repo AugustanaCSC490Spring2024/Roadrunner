@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, TouchableOpacity, Text, Modal } from 'react-native';
-import { styles } from '../constants/styles';
+import React from "react";
+import { View, TouchableOpacity, Text, Modal } from "react-native";
+import { styles } from "../constants/styles";
 
 const Settings = ({ visible, onClose, onArchiveChats, onDeleteChats }) => {
   return (
@@ -12,7 +12,10 @@ const Settings = ({ visible, onClose, onArchiveChats, onDeleteChats }) => {
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Text style={styles.closeButtonText}>x</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.option} onPress={() => console.log("Theme Options clicked")}>
+          <TouchableOpacity
+            style={styles.option}
+            onPress={() => console.log("Theme Options clicked")}
+          >
             <Text>Theme Options</Text>
           </TouchableOpacity>
           <View style={styles.separator} />

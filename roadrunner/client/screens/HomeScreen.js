@@ -12,23 +12,10 @@ import {
   Modal,
 } from "react-native";
 
-
 import { styles } from "../constants/styles";
-
 import Sidebar from "../components/sidebar";
 import Settings from "../components/settings";
-
-
-const Prompt = ({ prompt, onPromptPress }) => {
-  return (
-    <TouchableOpacity
-      onPress={() => onPromptPress(prompt)}
-      style={[styles.messagesContainer, styles.prompt]}
-    >
-      <Text style={[styles.messageText, styles.promptText]}>{prompt.text}</Text>
-    </TouchableOpacity>
-  );
-};
+import Prompt from "../prompts/prompts";
 
 export default function HomeScreen() {
   const [messages, setMessages] = useState([]); // State for messages
@@ -135,14 +122,17 @@ export default function HomeScreen() {
           }
         >
           {/*Render prompts if showPrompts is true */}
-          {showPrompts &&
-            promptMessages.map((prompt, index) => (
-              <Prompt
-                key={index}
-                prompt={prompt}
-                onPromptPress={handlePromptPress}
-              />
-            ))}
+          <View style={styles.promptContainer}>
+            {showPrompts &&
+              promptMessages.map((prompt, index) => (
+                <Prompt
+                  key={index}
+                  prompt={prompt}
+                  onPromptPress={handlePromptPress}
+                  style={styles.customPrompt} // Custom prompt styles from parent
+                />
+              ))}
+          </View>
 
           {/* Render messages */}
           {messages.map((message, index) => {

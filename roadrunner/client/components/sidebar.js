@@ -1,10 +1,15 @@
-import React from 'react';
-import { View, TouchableOpacity, Text, Modal } from 'react-native';
-import { styles } from '../constants/styles';
+import React from "react";
+import { View, TouchableOpacity, Text, Modal } from "react-native";
+import { styles } from "../constants/styles";
 
 const Sidebar = ({ visible, onClose, onViewHistory, onSettings, onLogout }) => {
   return (
-    <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={visible}
+      onRequestClose={onClose}
+    >
       <TouchableOpacity onPress={onClose} style={styles.sidebarContainer}>
         <View style={styles.sidebar}>
           <TouchableOpacity onPress={onViewHistory} style={styles.sidebarItem}>

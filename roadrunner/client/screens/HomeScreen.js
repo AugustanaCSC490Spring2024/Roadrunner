@@ -10,7 +10,7 @@ import {
 import { styles } from "../constants/styles";
 import Sidebar from "../components/sidebarComponent";
 import Settings from "../components/settingsComponent";
-import Prompt from "../prompts/prompts";
+import {Prompt, promptMessages} from "../prompts/prompts";
 import Message from "../components/messageComponent";
 import InputArea from "../components/InputAreaComponent";
 import Header from "../components/headerComponet";
@@ -24,22 +24,6 @@ export default function HomeScreen() {
   const [theme, setTheme] = useState("light");
   const scrollViewRef = useRef(); // Ref for ScrollView
 
-  // Static list of prompts
-  const [promptMessages] = useState([
-    {
-      key: "1",
-      text: "Fantasy team names",
-    },
-    {
-      key: "2",
-      text: "Python email script",
-    },
-    { key: "3", text: "Thank-you note to interviewer" },
-    {
-      key: "4",
-      text: "Thank-you note to babysitter",
-    },
-  ]);
 
   // Function to handle logout
   const handleLogout = () => {

@@ -146,7 +146,7 @@ const handlePromptPress = (prompt) => {
       </View>
 
       {/* Input area */}
-      <InputArea sendMessage={sendMessage} />
+      <InputArea inputText={inputText} setInputText={setInputText} sendMessage={sendMessage} />
 
       {/* Sidebar */}
       <Sidebar

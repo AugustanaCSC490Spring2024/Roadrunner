@@ -8,9 +8,7 @@ import {
 } from "react-native";
 import { styles } from "../constants/styles";
 
-export default function InputArea({ sendMessage }) {
-  const [inputText, setInputText] = React.useState(""); // State for input text
-
+export default function InputArea({ inputText, setInputText, sendMessage }) {
   const handleSendMessage = () => {
     sendMessage(inputText); // Pass inputText to sendMessage function
     setInputText(""); // Clear input text after sending message

@@ -17,6 +17,7 @@ import Sidebar from "../components/sidebarComponent";
 import Settings from "../components/settingsComponent";
 import Prompt from "../prompts/prompts";
 import Message from "../components/messageComponent";
+import InputArea from "../components/InputAreaComponent";
 
 export default function HomeScreen() {
   const [messages, setMessages] = useState([]); // State for messages
@@ -65,33 +66,33 @@ export default function HomeScreen() {
     console.log("Delete all chats");
   };
 
-  // Function to send message
-  const sendMessage = () => {
-    if (inputText.trim()) {
-      const newMessage = {
-        id: Date.now(),
-        role: "user",
-        content: inputText.trim(),
+// Function to send message
+const sendMessage = (messageContent) => {
+  if (messageContent && messageContent.trim()) { // Check if messageContent is defined and not empty before trimming
+    const newMessage = {
+      id: Date.now(),
+      role: "user",
+      content: messageContent.trim(),
+    };
+    setMessages([...messages, newMessage]);
+    setTimeout(() => {
+      const botMessage = {
+        id: Date.now() + 1,
+        role: "assistant",
+        content: "This is a simulated response.",
       };
-      setMessages([...messages, newMessage]);
-      setInputText("");
-      setTimeout(() => {
-        const botMessage = {
-          id: Date.now() + 1,
-          role: "assistant",
-          content: "This is a simulated response.",
-        };
-        setMessages((prevMessages) => [...prevMessages, botMessage]);
-      }, 1000); // Simulate a delay for bot response
-    }
-  };
+      setMessages((prevMessages) => [...prevMessages, botMessage]);
+    }, 1000); // Simulate a delay for bot response
+  }
+};
 
-  // Function to handle prompt press
-  const handlePromptPress = (prompt) => {
-    setInputText(prompt.text);
-    sendMessage();
-    setShowPrompts(false); // Hide prompts after one is clicked
-  };
+
+// Function to handle prompt press
+const handlePromptPress = (prompt) => {
+  sendMessage(prompt.text); // Pass prompt text to sendMessage function
+  setShowPrompts(false); // Hide prompts after one is clicked
+};
+
 
   // Function to toggle settings popup visibility
   const toggleSettingsPopup = () => {
@@ -112,7 +113,9 @@ export default function HomeScreen() {
           />
         </TouchableOpacity>
       </View>
+
       <View style={styles.separator} />
+
       <View style={styles.chatContainer}>
         <ScrollView
           style={styles.messagesContainer}
@@ -141,22 +144,9 @@ export default function HomeScreen() {
           ))}
         </ScrollView>
       </View>
+
       {/* Input area */}
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.inputContainer}
-      >
-        <TextInput
-          style={styles.input}
-          placeholder="Type your message here..."
-          value={inputText}
-          onChangeText={setInputText}
-          onSubmitEditing={sendMessage}
-        />
-        <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
-          <Text style={styles.sendButtonText}>Send</Text>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+      <InputArea sendMessage={sendMessage} />
 
       {/* Sidebar */}
       <Sidebar

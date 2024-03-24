@@ -1,10 +1,11 @@
 from litellm import completion
-from prompts import summary_prompt
+from ..prompts import summary_prompt
 import os
 
 class LLMClient:
     def __init__(self):
-        self.api_key = os.getenv("OPENAI_API_KEY")
+        # self.api_key = os.getenv("OPENAI_API_KEY")
+        self.api_key = "DUMMY_API"
         if not self.api_key:
             raise ValueError(
                 "API key not found. Please set the OPENAI_API_KEY environment variable."

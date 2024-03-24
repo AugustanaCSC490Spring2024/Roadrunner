@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from "react";
 import { View, SafeAreaView, ScrollView } from "react-native";
 
@@ -75,6 +76,7 @@ export default function HomeScreen() {
   const toggleSettingsPopup = () => {
     setSettingsVisible(!settingsVisible);
     setSidebarVisible(false); // Close sidebar
+
   };
 
   return (
@@ -83,7 +85,6 @@ export default function HomeScreen() {
       <Header openSidebar={openSidebar} />
 
       <View style={styles.separator} />
-
       <View style={styles.chatContainer}>
         <ScrollView
           style={styles.messagesContainer}

@@ -5,7 +5,6 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-
 } from "react-native";
 
 import { styles } from "../constants/styles";
@@ -14,7 +13,7 @@ import Settings from "../components/settingsComponent";
 import Prompt from "../prompts/prompts";
 import Message from "../components/messageComponent";
 import InputArea from "../components/InputAreaComponent";
-
+import Header from "../components/headerComponet";
 
 export default function HomeScreen() {
   const [messages, setMessages] = useState([]); // State for messages
@@ -52,6 +51,11 @@ export default function HomeScreen() {
   const handleViewHistory = () => {
     console.log("View history");
     setSidebarVisible(false); // Close sidebar after selecting an option
+  };
+
+  // Function to open the sidebar
+  const openSidebar = () => {
+    setSidebarVisible(true);
   };
 
   // Dummy functions for archive and delete chats
@@ -98,17 +102,8 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <TouchableOpacity
-          onPress={() => setSidebarVisible(true)} // Open sidebar
-          style={styles.sidebarButton}
-        >
-          <Image
-            source={require("../asset/images/menu-icon.png")}
-            style={styles.sidebarIcon}
-          />
-        </TouchableOpacity>
-      </View>
+      {/* Use Header component */}
+      <Header openSidebar={openSidebar} />
 
       <View style={styles.separator} />
 

@@ -1,16 +1,10 @@
 import React, { useState, useRef } from "react";
-import {
-  View,
-  SafeAreaView,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import { View, SafeAreaView, ScrollView } from "react-native";
 
 import { styles } from "../constants/styles";
 import Sidebar from "../components/sidebarComponent";
 import Settings from "../components/settingsComponent";
-import {Prompt, promptMessages} from "../prompts/prompts";
+import { Prompt, promptMessages } from "../prompts/prompts";
 import Message from "../components/messageComponent";
 import InputArea from "../components/InputAreaComponent";
 import Header from "../components/headerComponet";
@@ -23,7 +17,6 @@ export default function HomeScreen() {
   const [settingsVisible, setSettingsVisible] = useState(false); // State for settings popup visibility
   const [theme, setTheme] = useState("light");
   const scrollViewRef = useRef(); // Ref for ScrollView
-
 
   // Function to handle logout
   const handleLogout = () => {

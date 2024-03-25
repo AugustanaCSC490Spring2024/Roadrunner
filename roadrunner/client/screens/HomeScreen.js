@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { View, SafeAreaView, ScrollView } from "react-native";
+import { View, SafeAreaView, ScrollView, Text } from "react-native";
 
 import { styles } from "../constants/styles";
 import Sidebar from "../components/sidebarComponent";

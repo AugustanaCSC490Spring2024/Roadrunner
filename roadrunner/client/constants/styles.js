@@ -4,6 +4,17 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
+// Helper function to generate border radius style
+const borderRadius = (value) => ({
+  borderRadius: value,
+});
+
+// Helper function to generate padding style
+const padding = (vertical, horizontal) => ({
+  paddingVertical: vertical,
+  paddingHorizontal: horizontal,
+});
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -12,8 +23,7 @@ export const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: "row",
     justifyContent: "flex-start",
-    paddingHorizontal: wp("5%"),
-    paddingTop: hp("2%"),
+    ...padding(hp("2%"), wp("5%")),
     paddingBottom: hp("1%"),
   },
   sidebarButton: {
@@ -27,18 +37,21 @@ export const styles = StyleSheet.create({
   separator: {
     height: 10,
     backgroundColor: "transparent",
+    marginBottom: 10,
   },
   chatContainer: {
     flex: 1,
     paddingHorizontal: wp("5%"),
+    overflow: "hidden",
   },
   messagesContainer: {
     flex: 1,
     backgroundColor: "#D8E4D8",
-    borderRadius: 30,
+    ...borderRadius(30),
+    overflow: "hidden",
   },
   messagesContentContainer: {
-    padding: 20,
+    ...padding(20, 20),
   },
   userMessageContainer: {
     flexDirection: "row",
@@ -47,8 +60,8 @@ export const styles = StyleSheet.create({
     maxWidth: wp("70%"),
     alignSelf: "flex-end",
     backgroundColor: "#FFFFFF",
-    borderRadius: 25, // Adjusted border radius to match input border radius
-    padding: 10,
+    ...borderRadius(25),
+    ...padding(10, 10),
     marginBottom: 10,
   },
   assistantMessageContainer: {
@@ -58,8 +71,8 @@ export const styles = StyleSheet.create({
     maxWidth: wp("70%"),
     alignSelf: "flex-start",
     backgroundColor: "#CEEFCE",
-    borderRadius: 25, // Adjusted border radius to match input border radius
-    padding: 10,
+    ...borderRadius(25),
+    ...padding(10, 10),
     marginBottom: 10,
   },
   messageText: {
@@ -68,19 +81,19 @@ export const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: "row",
-    padding: 10,
+    ...padding(10, 10),
   },
   input: {
     flex: 1,
     padding: 10,
     backgroundColor: "#FFFFFF",
-    borderRadius: 25,
+    ...borderRadius(25),
     marginRight: 10,
-    marginBottom: 10, // Add marginBottom to match the spacing
+    marginBottom: 10,
   },
   sendButton: {
     backgroundColor: "#007bff",
-    borderRadius: 25,
+    ...borderRadius(25),
     padding: 10,
   },
   sendButtonText: {
@@ -89,7 +102,7 @@ export const styles = StyleSheet.create({
   messageImage: {
     width: wp("40%"),
     height: wp("40%"),
-    borderRadius: 20,
+    ...borderRadius(20),
   },
   sidebarContainer: {
     flex: 1,
@@ -114,37 +127,37 @@ export const styles = StyleSheet.create({
     fontSize: 18,
   },
   promptContainer: {
+    bottom: 0,
     flexDirection: "row",
     justifyContent: "space-between",
     flexWrap: "wrap",
-    paddingHorizontal: wp("5%"),
-    paddingBottom: hp("2%"),
+    marginTop: 1000, 
+    paddingBottom: hp("8%"),
+    marginBottom: 20,
   },
   prompt: {
-    backgroundColor: "#FFFFFF", // Set background color to match input background
-    paddingHorizontal: 10, // Adjust padding to match input padding
-    paddingVertical: 10,
-    borderRadius: 25, // Adjust border radius to match input border radius
+    backgroundColor: "#FFFFFF",
+    ...padding(10, 10),
+    ...borderRadius(25),
     marginBottom: 10,
     marginRight: 10,
-    width: wp("48%"), // Adjusted width to fit two prompts in a row with some spacing
+    width: wp("48%"),
   },
   promptText: {
-    color: "#000000", // Set text color to match input text color
-    textAlign: "center", // Center the text within the prompt
+    color: "#000000",
+    textAlign: "center",
   },
-
   settingsPopupContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   settingsPopup: {
     backgroundColor: "#fff",
     padding: 20,
     borderRadius: 10,
-    width: "80%", // Adjust width as needed
+    width: "80%",
   },
   settingHeader: {
     fontSize: 15,
@@ -155,17 +168,16 @@ export const styles = StyleSheet.create({
     position: "absolute",
     top: 10,
     right: 10,
-    backgroundColor: "transparent", // Transparent background
+    backgroundColor: "transparent",
     width: 30,
     height: 30,
     justifyContent: "center",
     alignItems: "center",
-
     borderColor: "#999",
   },
   closeButtonText: {
     fontSize: 18,
-    color: "#999", // Adjust color as needed
+    color: "#999",
   },
   option: {
     marginBottom: 10,

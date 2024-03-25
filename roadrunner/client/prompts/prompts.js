@@ -7,16 +7,11 @@ import { styles } from "../constants/styles";
 const promptMessages = [
   {
     key: "1",
-    text: "Fantasy team names",
+    text: "Summarize a note",
   },
   {
     key: "2",
     text: "Python email script",
-  },
-  { key: "3", text: "Thank-you note to interviewer" },
-  {
-    key: "4",
-    text: "Thank-you note to babysitter",
   },
 ];
 const Prompt = ({ prompt, onPromptPress, style }) => {

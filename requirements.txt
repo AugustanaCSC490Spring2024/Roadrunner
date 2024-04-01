@@ -1,6 +1,6 @@
 click
 litellm
-click
 openai
 openai-whisper @ git+https://github.com/openai/whisper.git
 torch
+fastapi

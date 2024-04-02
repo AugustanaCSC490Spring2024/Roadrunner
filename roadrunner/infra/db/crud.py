@@ -40,3 +40,10 @@ def log_conversation(db: Session, conversation_data):
     db.add(new_conversation)
     db.commit()
     return new_conversation
+
+# Capture
+def get_all_capture_sessions(db: Session):
+    return db.query(CaptureSession).all()
+
+def get_audio_snippets_by_session(db: Session, session_id: int):
+    return db.query(AudioSnippet).filter(AudioSnippet.capture_session_id == session_id).all()

@@ -17,7 +17,7 @@ class AudioSnippetBase(BaseModel):
     capture_session_id: int
     file_name: str
     recorded_at: Optional[datetime] = None
-    text: str
+    transcription: dict
     embeddings: dict
 
 class ConversationBase(BaseModel):

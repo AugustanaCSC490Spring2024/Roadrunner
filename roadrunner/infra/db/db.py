@@ -1,3 +1,4 @@
+import json
 import logging
 
 import sqlalchemy
@@ -38,24 +39,25 @@ def get_db():
         logger.info("Database session closed.")
 
 
-async def fetch_embeddings(text: str, db: Session):
-    pass
 
 
-async def store_catpure_database(
-    db: Session, user_id: int, text: str, embeddings: list, metadata: dict
+async def store_capture_database(
+    db: Session, user_id: int, transcription: dict, embeddings: list, metadata: dict
 ):
     try:
-        capture_session = CaptureSession(user_id=user_id, audio_snippets=[AudioSnippet(**metadata)])
-        print(capture_session)
-        
-        audio_snippet = AudioSnippet(text=text, embeddings=embeddings)
-        
-        capture_session.audio_snippets.append(audio_snippet)
-        
+        embeddings_json = json.dumps(embeddings)
+        capture_session = CaptureSession(user_id=user_id)
         db.add(capture_session)
+        db.commit()
+        db.refresh(capture_session)
+
+        audio_snippet = AudioSnippet(capture_session_id=capture_session.id, transcription=transcription, embeddings=embeddings_json, file_name=metadata['file_name'], recorded_at=metadata['recorded_at'])
+        db.add(audio_snippet)
+        db.commit()
+
         logger.info("Data stored in database successfully.")
     except Exception as e:
+        db.rollback()  # Rollback the session in case of error
         logger.error(f"Error storing data in database: {e}")
         raise e
 

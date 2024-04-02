@@ -1,5 +1,6 @@
 import os
 
+from litellm import completion
 from openai import OpenAI
 
 from ..prompts import summary_prompt
@@ -49,7 +50,7 @@ class LLMClient:
     def generate_completion(self, user_message):
         self.add_message("user", user_message)
         print(self.conversation)
-        response = self.client.Completion.create(model="gpt-3.5-turbo", messages=self.conversation, api_key=self.api_key)
+        response = completion(model="gpt-3.5-turbo", messages=self.conversation, api_key=self.api_key)
         return response.get('choices', [{}])[0].get('message', {}).get('content', 'No response generated')
 
 if __name__ == "__main__":

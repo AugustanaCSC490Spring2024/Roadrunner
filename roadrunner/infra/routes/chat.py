@@ -11,11 +11,11 @@ llm_client = LLMClient()
 @router.post("/chat")
 async def chat(request: Request, db: Session = Depends(get_db)):
     try:
-        chat_message = await request.json()
-        embeddings = llm_client.generate_embeddings(chat_message["text"])
-        prompt = f"User: {chat_message['text']}\nEmbeddings: {embeddings}\nAssistant:"
+        request = await request.json()
+        embeddings = llm_client.generate_embeddings(request["message"])
+        prompt = f"User: {request['message']}\nEmbeddings: {embeddings}\nAssistant:"
         response = llm_client.generate_completion(prompt)
-        await store_conversation(db, chat_message["user_id"], chat_message["text"], response)
+        await store_conversation(db, request["user_id"], request["message"], response)
         return {"response": response}
     except Exception as e:
         db.rollback()

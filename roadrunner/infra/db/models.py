@@ -15,7 +15,6 @@ class CaptureSession(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     start_time = Column(DateTime, nullable=False, default=datetime.utcnow)
-    end_time = Column(DateTime, nullable=True)
 
     user = relationship("User", back_populates="capture_sessions")
     audio_snippets = relationship("AudioSnippet", back_populates="capture_session", cascade="all, delete-orphan")
@@ -28,7 +27,7 @@ class AudioSnippet(Base):
     capture_session_id = Column(Integer, ForeignKey("capture_sessions.id"), nullable=False)
     file_name = Column(String, nullable=False)
     recorded_at = Column(DateTime, nullable=False, default=datetime.utcnow)
-    text = Column(String, nullable=False)
+    transcription = Column(JSON, nullable=False)
     embeddings = Column(JSON, nullable=True)
 
     capture_session = relationship("CaptureSession", back_populates="audio_snippets")

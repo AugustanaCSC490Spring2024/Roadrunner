@@ -5,8 +5,8 @@ from typing import Dict
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
-from ..db.crud import get_user
-from ..db.db import get_db, store_catpure_database
+from ..db.crud import get_all_capture_sessions, get_audio_snippets_by_session, get_user
+from ..db.db import get_db, store_capture_database
 from ..models.audiototext import audio_to_text
 from ..models.llm import LLMClient
 from ..utils.audio import save_audio_file
@@ -14,6 +14,18 @@ from ..utils.audio import save_audio_file
 llm_client = LLMClient()
 
 router = APIRouter()
+
+@router.get("/capture-sessions/")
+def get_capture_sessions(db: Session = Depends(get_db)):
+    sessions = get_all_capture_sessions(db)
+    return sessions
+
+@router.get("/capture-sessions/{session_id}/audio-snippets/")
+def get_audio_snippets(session_id: int, db: Session = Depends(get_db)):
+    snippets = get_audio_snippets_by_session(db, session_id)
+    if snippets is None:
+        raise HTTPException(status_code=404, detail="Audio snippets not found")
+    return snippets
 
 @router.post("/audio")
 async def process_audio(
@@ -31,11 +43,12 @@ async def process_audio(
     try:
         print("Processing audio", audio)
         audio_path = await save_audio_file(audio)
-        text = audio_to_text(audio_path, plain=True)
-        embeddings = llm_client.generate_embeddings(text)
+        transcription = audio_to_text(audio_path, plain=True)
+        embeddings = llm_client.generate_embeddings(transcription)
         metadata = {"file_name": audio.filename,
                     "recorded_at": datetime.utcnow()}
-        await store_catpure_database(db, user_id, text, embeddings, metadata)
+        print('text ❗️ ', transcription)
+        await store_capture_database(db, user_id, transcription, embeddings, metadata)
         return {"message": "Audio processed and stored successfully"}
     except Exception as e:
         db.rollback()

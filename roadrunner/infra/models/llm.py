@@ -38,7 +38,9 @@ class LLMClient:
         """
         self.add_message("system", "Generating embeddings for the given text.")
         try:
-            response = self.client.embeddings.create(model="text-embedding-ada-002", input=text)
+            response = self.client.embeddings.create(
+                model="text-embedding-ada-002", input=text
+            )
             embeddings = response.data[0].embedding if response.data else None
             if embeddings is None:
                 raise ValueError("No embeddings generated")
@@ -50,8 +52,15 @@ class LLMClient:
     def generate_completion(self, user_message):
         self.add_message("user", user_message)
         print(self.conversation)
-        response = completion(model="gpt-3.5-turbo", messages=self.conversation, api_key=self.api_key)
-        return response.get('choices', [{}])[0].get('message', {}).get('content', 'No response generated')
+        response = completion(
+            model="gpt-3.5-turbo", messages=self.conversation, api_key=self.api_key
+        )
+        return (
+            response.get("choices", [{}])[0]
+            .get("message", {})
+            .get("content", "No response generated")
+        )
+
 
 if __name__ == "__main__":
     llm_client = LLMClient()

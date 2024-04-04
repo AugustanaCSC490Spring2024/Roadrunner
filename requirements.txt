@@ -7,9 +7,11 @@ openai
 passlib
 password_strength
 py_avataaars
-pyaudio
 pydantic
 SQLAlchemy
 torch
 uvicorn
 openai-whisper @ git+https://github.com/openai/whisper.git
+aiosqlite
+litellm
+python-multipart

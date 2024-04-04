@@ -120,6 +120,7 @@ export default function HomeScreen() {
         setInputText={setInputText}
         sendMessage={sendMessage}
       />
+      
 
       {/* Sidebar */}
       <Sidebar

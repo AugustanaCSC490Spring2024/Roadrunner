@@ -10,7 +10,12 @@ m = model.to(device)
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'fjiderj@'
+    app.config['SECRET_KEY'] = 'jeinfuernicneri2o3@'
+    
+    from .routes.train import train
+    
+    app.register_blueprint(train, url_prefix='/t')
+    
     return app
 
 if __name__ =='__main__':

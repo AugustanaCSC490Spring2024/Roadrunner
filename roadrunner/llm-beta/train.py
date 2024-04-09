@@ -6,7 +6,7 @@ from datasets import load_dataset
 # hyperparameters
 batch_size = 16 # independent sequences to process in parallel
 block_size = 32 # maximum context length for predictions
-max_iters = 5000
+max_iters = 20000
 eval_interval = 100
 learning_rate = 1e-3
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -15,22 +15,28 @@ n_embd = 64
 n_head = 4
 n_layer = 4
 dropout = 0.0
+vocab_size = 500
 
 torch.manual_seed(1337)
 
 text = load_dataset("biglam/gutenberg-poetry-corpus")
 
-
-encode = lambda s: [ord(char) for char in s if char.isalpha() or char.isspace()]
+encode = lambda s: [ord(char) for char in s]
 decode = lambda l: ''.join([chr(i) for i in l])
 
-# Train and test splits
-data = torch.tensor(encode(text), dtype=torch.long)
+def encode_gutenberg(data):
+    res = []
+    for sublist in data['train'][slice(None, 30000, None)]['line']:
+        res.extend(encode(sublist))
+    return res
+
+
+data = torch.tensor(encode_gutenberg(text), dtype=torch.long)
 n = int(0.9*len(data)) # first 90% will be train, rest val
 train_data = data[:n]
 val_data = data[n:]
 
-# data loading
+#data loading
 def get_batch(split):
     # generate a small batch of data of inputs x and targets y
     data = train_data if split == 'train' else val_data

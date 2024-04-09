@@ -41,6 +41,12 @@ To run the Roadrunner project locally, clone the repository, navigate to the pro
 pip install -r requirements.txt
 ```
 
+Create virtual environment
+```
+python3 -m venv venv
+source venv/bin/activate
+```
+
 Then, start the FastAPI server in root directory:
 
 ```bash

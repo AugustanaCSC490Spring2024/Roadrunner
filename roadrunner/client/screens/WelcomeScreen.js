@@ -36,8 +36,10 @@ export default function WelcomeScreen() {
           className="w-72 h-72"
         />
       </View>
-      <TouchableOpacity onPress={() => navigation.navigate("Home")}
-        className="bg-emerald-600 mx-5 p-4 rounded-2xl">
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Home")}
+        className="bg-emerald-600 mx-5 p-4 rounded-2xl"
+      >
         <Text className="text-center font-bold text-white text-2xl">
           Get Started
         </Text>

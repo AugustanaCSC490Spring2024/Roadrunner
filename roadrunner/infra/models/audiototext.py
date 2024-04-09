@@ -1,14 +1,13 @@
 import os
 import re
-import torch
 from pathlib import Path
 
-
+import torch
 import whisper
 from whisper.utils import get_writer
 
 
-def audio_to_text(input_format, file_location, plain):
+def audio_to_text(file_location, plain):
     # Use CUDA, if available
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 

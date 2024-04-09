@@ -53,7 +53,10 @@ export default function LoginScreen() {
             entering={FadeInUp.duration(1000).springify()}
             className="bg-black/5 p-5 rounded-2xl w-full"
           >
-            <TextInput placeholder="Email" placeholderTextColor={"gray"} />
+            <TextInput 
+            name = "Password" 
+            placeholder="Email" 
+            placeholderTextColor={"gray"} />
           </Animated.View>
 
           <Animated.View
@@ -61,6 +64,7 @@ export default function LoginScreen() {
             className="bg-black/5 p-5 rounded-2xl w-full mb-3"
           >
             <TextInput
+              name = "Password" 
               placeholder="Password"
               placeholderTextColor={"gray"}
               secureTextEntry
@@ -72,7 +76,7 @@ export default function LoginScreen() {
             className="w-full"
           >
             <TouchableOpacity
-              onPress={() => navigation.navigate("Welcome")}
+              onPress={() => navigation.navigate("Home")}
               className="w-full bg-sky-400 p-3 rounded-2xl mb-3"
             >
               <Text className="text-xl font bold text-white text-center">

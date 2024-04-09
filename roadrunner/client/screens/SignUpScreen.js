@@ -49,19 +49,26 @@ export default function SignUpScreen() {
 
         {/* form */}
         <View className="flex items-center mx-4 space-y-4">
-
-        <Animated.View
+          <Animated.View
             entering={FadeInUp.duration(1000).springify()}
             className="bg-black/5 p-5 rounded-2xl w-full"
           >
-            <TextInput placeholder="Username" placeholderTextColor={"gray"} />
+            <TextInput
+              name="Username"
+              placeholder="Username"
+              placeholderTextColor={"gray"}
+            />
           </Animated.View>
 
           <Animated.View
             entering={FadeInUp.duration(1000).delay(200).springify()}
             className="bg-black/5 p-5 rounded-2xl w-full"
           >
-            <TextInput placeholder="Email" placeholderTextColor={"gray"} />
+            <TextInput
+              name="Email"
+              placeholder="Email"
+              placeholderTextColor={"gray"}
+            />
           </Animated.View>
 
           <Animated.View
@@ -69,6 +76,7 @@ export default function SignUpScreen() {
             className="bg-black/5 p-5 rounded-2xl w-full mb-3"
           >
             <TextInput
+              name="Password"
               placeholder="Password"
               placeholderTextColor={"gray"}
               secureTextEntry
@@ -79,7 +87,10 @@ export default function SignUpScreen() {
             entering={FadeInUp.duration(1000).delay(600).springify()}
             className="w-full"
           >
-            <TouchableOpacity className="w-full bg-sky-400 p-3 rounded-2xl mb-3">
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Home")}
+              className="w-full bg-sky-400 p-3 rounded-2xl mb-3"
+            >
               <Text className="text-xl font bold text-white text-center">
                 Sign Up
               </Text>

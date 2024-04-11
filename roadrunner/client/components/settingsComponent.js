@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, Text, Modal } from "react-native";
+import { View, TouchableOpacity, Text, Modal, Switch } from "react-native";
 import { styles } from "../constants/styles";
-import ThemeOptionsSettings from "../components/themeOptionsSettings";
 
 const Settings = ({ visible, onClose, onArchiveChats, onDeleteChats }) => {
   const [nestedSettingsVisible, setNestedSettingsVisible] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState(""); // State to track selected theme
+  const [isCustomThemeEnabled, setIsCustomThemeEnabled] = useState(false); // New state to control the switch
 
   const onSystemVClick = () => {
     setNestedSettingsVisible(true);
@@ -17,7 +17,13 @@ const Settings = ({ visible, onClose, onArchiveChats, onDeleteChats }) => {
 
   const handleThemeSelect = (theme) => {
     setSelectedTheme(theme);
+    setIsCustomThemeEnabled(true); // Enable custom theme when one is selected
     closeNestedSettings();
+  };
+
+  const toggleThemeSwitch = (value) => {
+    setIsCustomThemeEnabled(value);
+    // Additional logic to apply the theme can go here
   };
 
   return (
@@ -30,19 +36,19 @@ const Settings = ({ visible, onClose, onArchiveChats, onDeleteChats }) => {
             <Text style={styles.closeButtonText}>x</Text>
           </TouchableOpacity>
           <View style={styles.option}>
-            <TouchableOpacity
+            <View
               style={{
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
               }}
-              onPress={onSystemVClick}
             >
               <Text>Theme Options</Text>
-              <TouchableOpacity onPress={onSystemVClick}>
-                <Text style={{ fontSize: 14 }}>System v</Text>
-              </TouchableOpacity>
-            </TouchableOpacity>
+              <Switch
+                value={isCustomThemeEnabled}
+                onValueChange={toggleThemeSwitch}
+              />
+            </View>
           </View>
 
           <View style={styles.separator} />

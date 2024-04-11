@@ -187,4 +187,11 @@ export const styles = StyleSheet.create({
     borderBottomColor: "#999",
     marginBottom: 10,
   },
+  themeOptionsContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  
 });

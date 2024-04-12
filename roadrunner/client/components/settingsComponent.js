@@ -1,19 +1,10 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity, Text, Modal, Switch } from "react-native";
 import { styles } from "../constants/styles";
+import { darkStyles } from "../constants/darkStyle";
 
-const Settings = ({ visible, onClose, onArchiveChats, onDeleteChats }) => {
-  const [nestedSettingsVisible, setNestedSettingsVisible] = useState(false);
-  const [selectedTheme, setSelectedTheme] = useState(""); // State to track selected theme
+const Settings = ({ visible, onClose, onArchiveChats, onDeleteChats, onThemeChange }) => {
   const [isCustomThemeEnabled, setIsCustomThemeEnabled] = useState(false); // New state to control the switch
-
-  const onSystemVClick = () => {
-    setNestedSettingsVisible(true);
-  };
-
-  const closeNestedSettings = () => {
-    setNestedSettingsVisible(false);
-  };
 
   const handleThemeSelect = (theme) => {
     setSelectedTheme(theme);
@@ -22,15 +13,36 @@ const Settings = ({ visible, onClose, onArchiveChats, onDeleteChats }) => {
   };
 
   const toggleThemeSwitch = (value) => {
-    setIsCustomThemeEnabled(value);
+    setIsCustomThemeEnabled(value); 
+    onThemeChange(value ? "light" : "dark"); // Immediately update the theme
     // Additional logic to apply the theme can go here
   };
 
   return (
     <Modal visible={visible} onClose={onClose}>
-      <View style={styles.settingsPopupContainer}>
-        <View style={styles.settingsPopup}>
-          <Text style={styles.settingHeader}>Settings</Text>
+      <View
+        style={
+          isCustomThemeEnabled
+            ? darkStyles.settingsPopupContainer
+            : styles.settingsPopupContainer
+        }
+      >
+        <View
+          style={
+            isCustomThemeEnabled
+              ? darkStyles.settingsPopup
+              : styles.settingsPopup
+          }
+        >
+          <Text
+            style={
+              isCustomThemeEnabled
+                ? darkStyles.settingHeader
+                : styles.settingHeader
+            }
+          >
+            Settings
+          </Text>
           <View style={styles.separator} />
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Text style={styles.closeButtonText}>x</Text>
@@ -61,14 +73,6 @@ const Settings = ({ visible, onClose, onArchiveChats, onDeleteChats }) => {
           </TouchableOpacity>
         </View>
       </View>
-
-      {/* Nested Settings Popup */}
-      {nestedSettingsVisible && (
-        <ThemeOptionsSettings
-          onClose={closeNestedSettings}
-          onThemeSelect={handleThemeSelect}
-        />
-      )}
     </Modal>
   );
 };

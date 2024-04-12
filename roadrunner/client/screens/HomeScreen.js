@@ -1,7 +1,8 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { View, SafeAreaView, ScrollView, Text } from "react-native";
-
+import { useNavigation } from "@react-navigation/native";
 import { styles } from "../constants/styles";
+import { darkStyles } from "../constants/darkStyle";
 import Sidebar from "../components/sidebarComponent";
 import Settings from "../components/settingsComponent";
 import { Prompt, promptMessages } from "../prompts/prompts";
@@ -12,14 +13,19 @@ import { API_URL } from "../constants/config";
 
 import axios from "axios";
 
-export default function HomeScreen() {
+export default function HomeScreen({ selectedTheme, onThemeChange }) {
   const [messages, setMessages] = useState([]); // State for messages
   const [inputText, setInputText] = useState(""); // State for input text
   const [sidebarVisible, setSidebarVisible] = useState(false); // State for sidebar visibility
   const [showPrompts, setShowPrompts] = useState(true); // State for showing prompts
   const [settingsVisible, setSettingsVisible] = useState(false); // State for settings popup visibility
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("light"); //Initialize theme to "light"
   const scrollViewRef = useRef(); // Ref for ScrollView
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    setTheme(selectedTheme || "light");
+  }, [selectedTheme]);
 
   // Function to handle logout
   const handleLogout = () => {
@@ -107,30 +113,62 @@ export default function HomeScreen() {
     setSidebarVisible(false); // Close sidebar
   };
 
+  // Function to handle theme change
+  const handleThemeChange = (newTheme) => {
+    setTheme(newTheme);
+    navigation.setOptions({ headerTitle: newTheme });
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={theme === "light" ? styles.container : darkStyles.container}
+    >
       {/* Use Header component */}
       <Header openSidebar={openSidebar} />
 
-      <View style={styles.separator} />
-      <View style={styles.chatContainer}>
+      <View
+        style={theme === "light" ? styles.separator : darkStyles.separator}
+      />
+      <View
+        style={
+          theme === "light" ? styles.chatContainer : darkStyles.chatContainer
+        }
+      >
         <ScrollView
-          style={styles.messagesContainer}
-          contentContainerStyle={styles.messagesContentContainer}
+          style={
+            theme === "light"
+              ? styles.messagesContainer
+              : darkStyles.messagesContainer
+          }
+          contentContainerStyle={
+            theme === "light"
+              ? styles.messagesContentContainer
+              : darkStyles.messagesContentContainer
+          }
           ref={scrollViewRef}
           onContentSizeChange={() =>
             scrollViewRef.current.scrollToEnd({ animated: true })
           }
         >
-          {/*Render prompts if showPrompts is true */}
-          <View style={styles.promptContainer}>
+          {/* Render prompts if showPrompts is true */}
+          <View
+            style={
+              theme === "light"
+                ? styles.promptContainer
+                : darkStyles.promptContainer
+            }
+          >
             {showPrompts &&
               promptMessages.map((prompt, index) => (
                 <Prompt
                   key={index}
                   prompt={prompt}
                   onPromptPress={handlePromptPress}
-                  style={styles.customPrompt} // Custom prompt styles from parent
+                  style={
+                    theme === "light"
+                      ? styles.customPrompt
+                      : darkStyles.customPrompt
+                  } // Custom prompt styles from parent
                 />
               ))}
           </View>
@@ -164,6 +202,7 @@ export default function HomeScreen() {
         onClose={toggleSettingsPopup}
         onArchiveChats={archiveAllChats}
         onDeleteChats={deleteAllChats}
+        onThemeChange={handleThemeChange}
       />
     </SafeAreaView>
   );

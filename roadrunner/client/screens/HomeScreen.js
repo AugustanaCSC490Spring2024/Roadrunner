@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from "react";
 import { View, SafeAreaView, ScrollView, Text } from "react-native";
 
@@ -9,6 +8,9 @@ import { Prompt, promptMessages } from "../prompts/prompts";
 import Message from "../components/messageComponent";
 import InputArea from "../components/InputAreaComponent";
 import Header from "../components/headerComponet";
+import { API_URL } from "../constants/config";
+
+import axios from "axios";
 
 export default function HomeScreen() {
   const [messages, setMessages] = useState([]); // State for messages
@@ -46,7 +48,8 @@ export default function HomeScreen() {
   };
 
   // Function to send message
-  const sendMessage = (messageContent) => {
+
+  const sendMessage = async (messageContent) => {
     if (messageContent && messageContent.trim()) {
       // Check if messageContent is defined and not empty before trimming
       const newMessage = {
@@ -55,14 +58,40 @@ export default function HomeScreen() {
         content: messageContent.trim(),
       };
       setMessages([...messages, newMessage]);
-      setTimeout(() => {
-        const botMessage = {
-          id: Date.now() + 1,
-          role: "assistant",
-          content: "This is a simulated response.",
-        };
-        setMessages((prevMessages) => [...prevMessages, botMessage]);
-      }, 1000); // Simulate a delay for bot response
+
+      try {
+        // Make a POST request to the chat API
+        const response = await axios.post(API_URL, {
+          message: messageContent.trim(),
+        });
+
+        // Check if the response contains an error
+        if (
+          Array.isArray(response.data) &&
+          response.data.length > 0 &&
+          response.data[0].error
+        ) {
+          console.error("API Error:", response.data[0].error);
+          // Handle the error, e.g., display an error message to the user
+        } else {
+          // Extract the response content
+          const responseData = response.data;
+
+          // Construct the bot message
+          const botMessage = {
+            id: Date.now() + 1,
+            role: "assistant",
+            content: responseData.response,
+          };
+
+          // Update messages state with the bot response
+          setMessages((prevMessages) => [...prevMessages, botMessage]);
+        }
+      } catch (error) {
+        // Handle error if request fails
+        console.error("Error fetching response:", error);
+        // Optionally, you can display an error message to the user
+      }
     }
   };
 
@@ -76,7 +105,6 @@ export default function HomeScreen() {
   const toggleSettingsPopup = () => {
     setSettingsVisible(!settingsVisible);
     setSidebarVisible(false); // Close sidebar
-
   };
 
   return (
@@ -120,7 +148,6 @@ export default function HomeScreen() {
         setInputText={setInputText}
         sendMessage={sendMessage}
       />
-      
 
       {/* Sidebar */}
       <Sidebar

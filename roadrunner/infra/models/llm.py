@@ -1,9 +1,13 @@
+import logging
 import os
+import traceback
 
-from litellm import completion
+from litellm import acompletion, completion
 from openai import OpenAI
 
 from ..prompts import summary_prompt
+
+logger = logging.getLogger(__name__)
 
 
 class LLMClient:
@@ -49,16 +53,15 @@ class LLMClient:
             print(f"An error occurred while generating embeddings: {e}")
             return None
 
-    def generate_completion(self, user_message):
+    async def async_completion(self, user_message):
+        logger.info(f"LLM async completion request...")
         self.add_message("user", user_message)
-        print(self.conversation)
-        response = completion(
-            model="gpt-3.5-turbo", messages=self.conversation, api_key=self.api_key
-        )
-        return (
-            response.get("choices", [{}])[0]
-            .get("message", {})
-            .get("content", "No response generated")
+        logger.info(f"Conversation: {self.conversation}")
+        return await acompletion(
+            model="gpt-3.5-turbo",
+            messages=self.conversation,
+            api_key=self.api_key,
+            stream=True,
         )
 
 

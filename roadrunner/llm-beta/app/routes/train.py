@@ -8,13 +8,14 @@ train = Blueprint('train', __name__)
 
 batch_size = 16 # independent sequences to process in parallel
 block_size = 32 # maximum context length for predictions
-max_iters = 20000
+max_iters = 5
 eval_interval = 100
 eval_iters = 200
 learning_rate = 1e-3
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
+print("Entry point for train routes")
 encode = lambda s: [ord(char) for char in s]
 decode = lambda l: ''.join([chr(i) for i in l])
 
@@ -30,13 +31,20 @@ data = torch.tensor(encode_gutenberg(text), dtype=torch.long)
 n = int(0.9*len(data)) # first 90% will be train, rest val
 train_data = data[:n]
 val_data = data[n:]
+print("Finished downloading data!!!")
 
 
 
 
-@train.route('/train', methods=['GET'])
+@train.route('train/', methods=['GET'])
 def train_el():
+    print("Initially came to train")
     train_model(m)
+    return "Pretraining done!"
+
+@train.route('hello/', methods=['GET'])
+def hello_world():
+    return 'Hello world'
     
 
 #data loading
@@ -81,3 +89,6 @@ def train_model(model):
         optimizer.zero_grad(set_to_none=True)
         loss.backward()
         optimizer.step()
+    # generate from the model
+    context = torch.zeros((1, 1), dtype=torch.long, device=device)
+    print(decode(m.generate(context, max_new_tokens=2000)[0].tolist()))

@@ -13,7 +13,7 @@ n_embd = 64
 n_head = 4
 n_layer = 4
 dropout = 0.0
-vocab_size = 500
+
 
 
 class Head(nn.Module):

@@ -22,7 +22,9 @@ async def chat(request: Request, db: Session = Depends(get_db)):
         prompt = f"User: {request_data['message']}\nAssistant:"
         print("prompt", prompt)
 
-        # await store_conversation(db, request_data["user_id"], request_data["message"], "response_placeholder")
+        await store_conversation(
+            db, request_data["user_id"], request_data["message"], "response_placeholder"
+        )
         try:
             stream = await llm_client.async_completion(prompt)
 

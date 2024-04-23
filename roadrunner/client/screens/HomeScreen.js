@@ -1,28 +1,26 @@
+import React, { useRef, useState } from "react";
+import { SafeAreaView, ScrollView, View } from "react-native";
 
-import React, { useState, useRef } from "react";
-import { View, SafeAreaView, ScrollView } from "react-native";
-
-import { styles } from "../constants/styles";
-import Sidebar from "../components/sidebarComponent";
-import Settings from "../components/settingsComponent";
-import { Prompt, promptMessages } from "../prompts/prompts";
-import Message from "../components/messageComponent";
 import InputArea from "../components/InputAreaComponent";
 import Header from "../components/headerComponet";
+import Message from "../components/messageComponent";
+import Settings from "../components/settingsComponent";
+import Sidebar from "../components/sidebarComponent";
+import { styles } from "../constants/styles";
+import { Prompt, promptMessages } from "../prompts/prompts";
 
 export default function HomeScreen() {
   const [messages, setMessages] = useState([]); // State for messages
   const [inputText, setInputText] = useState(""); // State for input text
   const [sidebarVisible, setSidebarVisible] = useState(false); // State for sidebar visibility
   const [showPrompts, setShowPrompts] = useState(true); // State for showing prompts
-  const [settingsVisible, setSettingsVisible] = useState(false); // State for settings popup visibility
+  const [settingsVisible, setSettingsVisible] = useState(false);
   const [theme, setTheme] = useState("light");
-  const scrollViewRef = useRef(); // Ref for ScrollView
+  const scrollViewRef = useRef();
 
-  // Function to handle logout
   const handleLogout = () => {
     console.log("User logged out");
-    setSidebarVisible(false); // Close sidebar after selecting an option
+    setSidebarVisible(false);
   };
 
   // Function to handle view history
@@ -76,7 +74,6 @@ export default function HomeScreen() {
   const toggleSettingsPopup = () => {
     setSettingsVisible(!settingsVisible);
     setSidebarVisible(false); // Close sidebar
-
   };
 
   return (

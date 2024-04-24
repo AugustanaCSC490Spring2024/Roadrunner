@@ -81,13 +81,6 @@ async def store_conversation(
         db.add(conversation)
         db.commit()
         logger.info("Conversation stored in database successfully.")
-        conversation = Conversation(
-            user_id=user_id,
-            user_message=user_message,
-            assistant_response=assistant_response,
-        )
-        db.add(conversation)
-        logger.info("Conversation stored in database successfully.")
     except Exception as e:
         logger.error(f"Error storing conversation in database: {e}")
         raise e

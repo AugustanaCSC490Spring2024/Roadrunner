@@ -1,5 +1,16 @@
+from fastapi import HTTPException
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
+
+from roadrunner.infra.db.schemas import (
+    ConversationBase,
+    ConversationCreate,
+    ConversationMessage,
+)
+from roadrunner.infra.utils import logger
+
+log = logger.get_logger(__name__)
+
 
 from .models import Capture, Conversation, User
 
@@ -37,11 +48,30 @@ def create_capture(db: Session, capture_data) -> Capture:
     return new_capture
 
 
-def create_conversation(db: Session, conversation_data) -> Conversation:
-    new_conversation = Conversation(**conversation_data.dict())
+# Conversation
+def create_conversation(
+    db: Session, conversation_data: ConversationCreate
+) -> Conversation:
+    log.info(f"Create conversation data: {conversation_data}")
+    new_conversation = Conversation(**conversation_data.model_dump())
     db.add(new_conversation)
     db.commit()
     return new_conversation
+
+
+def add_message_to_conversation(
+    db: Session, conversation_id: int, messages: list[ConversationMessage]
+) -> Conversation:
+    conversation = get_conversation(db, conversation_id)
+    if not conversation:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    conversation.context.append(messages)
+    db.commit()
+    return conversation
+
+
+def get_conversation(db: Session, conversation_id: int) -> Conversation:
+    return db.query(Conversation).filter(Conversation.id == conversation_id).first()
 
 
 def get_all_captures(db: Session) -> list:

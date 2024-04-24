@@ -1,20 +1,20 @@
-import logging
 import os
 import traceback
 
 from litellm import acompletion, completion
 from openai import OpenAI
 
+from roadrunner.infra.utils import logger
+
 from ..prompts import summary_prompt
 
-logger = logging.getLogger(__name__)
+log = logger.get_logger(__name__)
 
 
 class LLMClient:
     def __init__(self):
         self.client = OpenAI()
         self.api_key = self._get_api_key()
-        self.conversation = self._initialize_conversation()
 
     def _get_api_key(self):
         api_key = os.getenv("OPENAI_API_KEY")
@@ -24,11 +24,8 @@ class LLMClient:
             )
         return api_key
 
-    def _initialize_conversation(self):
+    def get_system_message(self):
         return [{"role": "system", "content": summary_prompt()}]
-
-    def add_message(self, role: str, content: str):
-        self.conversation.append({"role": role, "content": content})
 
     def generate_embeddings(self, text):
         """
@@ -53,13 +50,14 @@ class LLMClient:
             print(f"An error occurred while generating embeddings: {e}")
             return None
 
-    async def async_completion(self, user_message):
-        logger.info(f"LLM async completion request...")
-        self.add_message("user", user_message)
-        logger.info(f"Conversation: {self.conversation}")
+    async def async_completion(self, messages):
+        log.info(f"LLM async completion request...")
+        messages = self.get_system_message() + messages
+        log.info(f"Conversation: {messages}")
+
         return await acompletion(
             model="gpt-3.5-turbo",
-            messages=self.conversation,
+            messages=messages,
             api_key=self.api_key,
             stream=True,
         )

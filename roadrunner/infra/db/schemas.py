@@ -22,7 +22,7 @@ class User(UserBase):
 class CaptureBase(BaseModel):
     user_id: int
     transcript: str
-    summary: str
+    summary: Optional[str] = None
     created_at: Optional[datetime] = None
     embeddings: Optional[dict] = None
 
@@ -34,11 +34,34 @@ class Capture(CaptureBase):
 class ConversationBase(BaseModel):
     user_id: int
     created_at: Optional[datetime] = None
-    context: dict
+    context: List["ConversationMessage"] = []
 
 
 class Conversation(ConversationBase):
     id: int
+
+
+class ConversationMessage(BaseModel):
+    role: str
+    content: str
+
+
+class ConversationCreate(ConversationBase):
+    id: Optional[int] = None
+
+
+class Conversation(ConversationBase):
+    id: int
+
+
+class ConversationCreate(ConversationBase):
+    pass
+
+
+class ChatRequest(BaseModel):
+    message: str
+    conversation_id: Optional[int] = None
+    user_id: int
 
 
 User.model_rebuild()

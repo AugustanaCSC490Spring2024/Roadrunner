@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+from pathlib import Path
 from typing import Dict
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
@@ -10,6 +11,9 @@ from ..db.db import get_db, store_capture_database
 from ..models.audiototext import audio_to_text
 from ..models.llm import LLMClient
 from ..utils.audio import save_audio_file
+
+# Path on the same root as database
+ASSETS_PATH = "roadrunner/assets/"
 
 llm_client = LLMClient()
 
@@ -41,11 +45,18 @@ async def process_audio(
         transcription = audio_to_text(audio_path, plain=True)
         embeddings = llm_client.generate_embeddings(transcription)
         metadata = {"file_name": audio.filename, "recorded_at": datetime.utcnow()}
-        print("transcription", transcription["text"])
+        print("text ❗️ ", transcription)
 
-        await store_capture_database(
-            db, user_id, transcription["text"], embeddings, metadata
-        )
+        # creating text file and save to assets folder
+        text_path = Path(
+            os.path.join(ASSETS_PATH, "text/", f"{audio.filename}.txt")
+        ).resolve()
+        print(text_path)
+        with open(text_path, "w", encoding="utf-8") as txt:
+            print(f"\nCreating text file ❗️ ")
+            txt.write(transcription["text"])
+
+        await store_capture_database(db, user_id, transcription, embeddings, metadata)
         return {"message": "Audio processed and stored successfully"}
     except Exception as e:
         db.rollback()

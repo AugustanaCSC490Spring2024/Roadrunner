@@ -8,12 +8,13 @@ import Settings from "../components/settingsComponent";
 import Sidebar from "../components/sidebarComponent";
 import { styles } from "../constants/styles";
 import { Prompt, promptMessages } from "../prompts/prompts";
+const API_URL = "http://192.168.1.100:8000/chat";
 
 export default function HomeScreen() {
-  const [messages, setMessages] = useState([]); // State for messages
-  const [inputText, setInputText] = useState(""); // State for input text
-  const [sidebarVisible, setSidebarVisible] = useState(false); // State for sidebar visibility
-  const [showPrompts, setShowPrompts] = useState(true); // State for showing prompts
+  const [messages, setMessages] = useState([]);
+  const [inputText, setInputText] = useState("");
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+  const [showPrompts, setShowPrompts] = useState(true);
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [theme, setTheme] = useState("light");
   const scrollViewRef = useRef();
@@ -23,10 +24,9 @@ export default function HomeScreen() {
     setSidebarVisible(false);
   };
 
-  // Function to handle view history
   const handleViewHistory = () => {
     console.log("View history");
-    setSidebarVisible(false); // Close sidebar after selecting an option
+    setSidebarVisible(false);
   };
 
   // Function to open the sidebar
@@ -43,24 +43,23 @@ export default function HomeScreen() {
     console.log("Delete all chats");
   };
 
-  // Function to send message
-  const sendMessage = (messageContent) => {
-    if (messageContent && messageContent.trim()) {
-      // Check if messageContent is defined and not empty before trimming
-      const newMessage = {
-        id: Date.now(),
-        role: "user",
-        content: messageContent.trim(),
-      };
-      setMessages([...messages, newMessage]);
-      setTimeout(() => {
-        const botMessage = {
-          id: Date.now() + 1,
-          role: "assistant",
-          content: "This is a simulated response.",
-        };
-        setMessages((prevMessages) => [...prevMessages, botMessage]);
-      }, 1000); // Simulate a delay for bot response
+  const sendMessage = async (messageContent) => {
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: 1,
+          conversation_id: 1,
+          message: messageContent,
+        }),
+      });
+      const jsonResponse = await response.json();
+      setResponse(jsonResponse.message);
+    } catch (error) {
+      console.error("Error:", error);
     }
   };
 

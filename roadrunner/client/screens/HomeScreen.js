@@ -9,7 +9,8 @@ import Sidebar from "../components/sidebarComponent";
 import { styles } from "../constants/styles";
 import { darkStyles } from "../constants/darkStyle";
 import { Prompt, promptMessages } from "../prompts/prompts";
-const API_URL = "http://192.168.1.100:8000/chat";
+import EventSource from "react-native-event-source";
+const API_URL = "http://127.0.0.1:8000/chat";
 
 export default function HomeScreen({ selectedTheme, onThemeChange }) {
   const [messages, setMessages] = useState([]);
@@ -50,23 +51,39 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
     console.log("Delete all chats");
   };
 
+  // Function to send message
   const sendMessage = async (messageContent) => {
     try {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_id: 1,
-          conversation_id: 1,
-          message: messageContent,
-        }),
-      });
-      const jsonResponse = await response.json();
-      setResponse(jsonResponse.message);
+      if (messageContent && messageContent.trim()) {
+        // Add user's request to messages
+        const userMessage = { role: "user", content: messageContent.trim() };
+        setMessages((prevMessages) => [...prevMessages, userMessage]);
+
+        const response = await fetch(`${API_URL}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: 1,
+            conversation_id: 1,
+            message: messageContent.trim(),
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const textResponse = await response.text();
+        const cleanedResponse = textResponse
+          .replace(/["']/g, "")
+          .replace(/\s{2,}/g, " ");
+        const botMessage = { role: "assistant", content: cleanedResponse };
+        setMessages((prevMessages) => [...prevMessages, botMessage]);
+      }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error fetching response:", error);
     }
   };
 

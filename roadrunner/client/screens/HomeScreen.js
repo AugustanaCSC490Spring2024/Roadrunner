@@ -1,16 +1,17 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { SafeAreaView, ScrollView, View } from "react-native";
-
+import { useNavigation } from "@react-navigation/native";
 import InputArea from "../components/InputAreaComponent";
 import Header from "../components/headerComponet";
 import Message from "../components/messageComponent";
 import Settings from "../components/settingsComponent";
 import Sidebar from "../components/sidebarComponent";
 import { styles } from "../constants/styles";
+import { darkStyles } from "../constants/darkStyle";
 import { Prompt, promptMessages } from "../prompts/prompts";
 const API_URL = "http://192.168.1.100:8000/chat";
 
-export default function HomeScreen() {
+export default function HomeScreen({ selectedTheme, onThemeChange }) {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState("");
   const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -18,6 +19,12 @@ export default function HomeScreen() {
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [theme, setTheme] = useState("light");
   const scrollViewRef = useRef();
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    setTheme(selectedTheme || "light");
+  }, [selectedTheme]);
 
   const handleLogout = () => {
     console.log("User logged out");
@@ -73,6 +80,12 @@ export default function HomeScreen() {
   const toggleSettingsPopup = () => {
     setSettingsVisible(!settingsVisible);
     setSidebarVisible(false); // Close sidebar
+  };
+
+  // Function to handle theme change
+  const handleThemeChange = (newTheme) => {
+    setTheme(newTheme);
+    navigation.setOptions({ headerTitle: newTheme });
   };
 
   return (

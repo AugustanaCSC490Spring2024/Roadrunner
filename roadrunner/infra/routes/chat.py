@@ -14,6 +14,7 @@ from roadrunner.infra.db.crud import (
     create_conversation,
     get_conversation,
 )
+from roadrunner.infra.db.embeddings import get_relevant_records
 from roadrunner.infra.db.schemas import (
     ChatRequest,
     ConversationBase,
@@ -55,11 +56,19 @@ async def chat(request: ChatRequest, db: Session = Depends(get_db)):
         "role": "user",
         "content": request.message,
     }
-    chat_messages.append(user_message)
-    log.info(f"Chat messages: {chat_messages}")
+    relevant_records = await get_relevant_records(db, request.message)
+    log.info(f"Relevant records: {relevant_records}")
+
+    messages = (
+        [llm_client.get_system_message(relevant_records)]
+        + chat_messages
+        + [user_message]
+    )
+
+    log.info(f"Chat messages: {messages}")
 
     try:
-        stream = await llm_client.async_completion(chat_messages)
+        stream = await llm_client.async_completion(messages)
 
         async def generator():
             async for chunk in stream:

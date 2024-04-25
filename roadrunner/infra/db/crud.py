@@ -1,3 +1,4 @@
+import numpy as np
 from fastapi import HTTPException
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
@@ -12,7 +13,7 @@ from roadrunner.infra.utils import logger
 log = logger.get_logger(__name__)
 
 
-from .models import Capture, Conversation, User
+from .models import Capture, Conversation, Embedding, User
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -76,3 +77,19 @@ def get_conversation(db: Session, conversation_id: int) -> Conversation:
 
 def get_all_captures(db: Session) -> list:
     return db.query(Capture).all()
+
+
+# Embedding
+def create_embedding(db: Session, text: str, vector: np.ndarray) -> Embedding:
+    embedding = Embedding(text=text, vector=vector)
+    db.add(embedding)
+    db.commit()
+    return embedding
+
+
+def get_all_embeddings(db: Session) -> list:
+    return db.query(Embedding).all()
+
+
+def get_embedding(db: Session, text: str) -> Embedding:
+    return db.query(Embedding).filter(Embedding.text == text).first()

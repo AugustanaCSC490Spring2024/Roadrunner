@@ -6,7 +6,7 @@ from openai import OpenAI
 
 from roadrunner.infra.utils import logger
 
-from ..prompts import summary_prompt
+from ..prompts import system_prompt
 
 log = logger.get_logger(__name__)
 
@@ -24,8 +24,8 @@ class LLMClient:
             )
         return api_key
 
-    def get_system_message(self):
-        return [{"role": "system", "content": summary_prompt()}]
+    def get_system_message(self, records):
+        return {"role": "system", "content": system_prompt(records)}
 
     def generate_embeddings(self, text):
         """
@@ -51,7 +51,6 @@ class LLMClient:
 
     async def async_completion(self, messages):
         log.info(f"LLM async completion request...")
-        messages = self.get_system_message() + messages
         log.info(f"Conversation: {messages}")
 
         return await acompletion(

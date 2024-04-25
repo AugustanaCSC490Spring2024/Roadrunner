@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import JSON, Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy import JSON, Column, DateTime, ForeignKey, Integer, PickleType, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -39,3 +39,10 @@ class User(Base):
 
     captures = relationship("Capture", back_populates="user")
     conversations = relationship("Conversation", back_populates="user")
+
+
+class Embedding(Base):
+    __tablename__ = "embeddings"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    vector = Column(PickleType, nullable=False)
+    text = Column(String, nullable=False)

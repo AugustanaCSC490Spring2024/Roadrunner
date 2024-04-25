@@ -1,3 +1,4 @@
+import uvicorn
 from fastapi import FastAPI
 
 from .db.db import database, engine, metadata
@@ -11,7 +12,15 @@ app = FastAPI()
 app.include_router(user_router)
 app.include_router(audio_router)
 app.include_router(chat_router)
+
+
+@app.get("/")
+async def root():
+    return "Hello from roadrunner"
+
+
 Base.metadata.create_all(bind=engine)
+
 
 @app.on_event("startup")
 async def startup():
@@ -24,6 +33,5 @@ async def shutdown():
 
 
 if __name__ == "__main__":
-    import uvicorn
 
     uvicorn.run(app, host="127.0.0.1", port=8000)

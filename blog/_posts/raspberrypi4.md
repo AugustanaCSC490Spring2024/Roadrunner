@@ -1,13 +1,26 @@
+---
+title: "Raspberry Pi recording and saving audio to file"
+excerpt: "Test out the capability of RP4 to record and saving file."
+coverImage: "/assets/blog/raspberrypi4/rp4.png"
+date: "2024-04-04"
+author:
+  name: Viet M. Bui
+  # picture: "/assets/blog/authors/tim.jpeg"
+ogImage:
+  url: "/assets/blog/raspberrypi4/rp4.png"
+---
+
+```python
 import pyaudio
 import wave
 from pydub import AudioSegment
 import os
 
 # Set parameters
-RATE = 48000
 CHUNK = 1024
 FORMAT = pyaudio.paInt16
 CHANNELS = 2
+RATE = 44100
 RECORD_SECONDS = 10
 FOLDER_LOCATION = "audio/"
 
@@ -31,9 +44,9 @@ while count < 100:
     p = pyaudio.PyAudio()
 
     # Open a stream for recording
-    stream = p.open(rate=RATE,
+    stream = p.open(format=FORMAT,
                     channels=CHANNELS,
-                    format=FORMAT,
+                    rate=RATE,
                     input=True,
                     frames_per_buffer=CHUNK)
 
@@ -68,3 +81,12 @@ while count < 100:
 
     print(f"Audio recording saved as {MP3_OUTPUT_FILENAME}")
     count = count + 1
+```
+
+Since I cannot always commit all the files on raspberry pi so I just drop all of my works on this blog. 
+
+The biggest issue and concerns in remote ssh in to the pi and also have to deal with the potential of carrying the pi to a different wifi network and attempt to connect that into the network.
+
+The script works by limiting the number of files that it write, max out at 10 files and automatically delete the oldest file in the audio folder.
+
+What to work on from now is compress the audio wav file and api upload this to the infra str from Hung's works.

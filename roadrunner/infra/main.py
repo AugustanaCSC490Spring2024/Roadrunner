@@ -7,12 +7,18 @@ from .routes.audio import router as audio_router
 from .routes.chat import router as chat_router
 from .routes.user import router as user_router
 
-
 app = FastAPI()
 
 app.include_router(user_router)
 app.include_router(audio_router)
 app.include_router(chat_router)
+
+
+@app.get("/")
+async def root():
+    return "Hello from roadrunner"
+
+
 Base.metadata.create_all(bind=engine)
 
 

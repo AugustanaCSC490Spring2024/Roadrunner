@@ -1,6 +1,5 @@
 import torch.nn as nn
 
-
 dropout = 0.0
 
 class FeedFoward(nn.Module):
@@ -17,3 +16,5 @@ class FeedFoward(nn.Module):
 
     def forward(self, x):
         return self.net(x)
+    
+    

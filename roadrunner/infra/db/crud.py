@@ -3,12 +3,12 @@ from fastapi import HTTPException
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
-from roadrunner.infra.db.schemas import (
+from infra.db.schemas import (
     ConversationBase,
     ConversationCreate,
     ConversationMessage,
 )
-from roadrunner.infra.utils import logger
+from infra.utils import logger
 
 log = logger.get_logger(__name__)
 

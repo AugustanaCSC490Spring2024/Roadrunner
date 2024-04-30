@@ -9,18 +9,18 @@ from fastapi import APIRouter, Depends, Request
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
-from roadrunner.infra.db.crud import (
+from infra.db.crud import (
     add_message_to_conversation,
     create_conversation,
     get_conversation,
 )
-from roadrunner.infra.db.embeddings import get_relevant_records
-from roadrunner.infra.db.schemas import (
+from infra.db.embeddings import get_relevant_records
+from infra.db.schemas import (
     ChatRequest,
     ConversationBase,
     ConversationCreate,
 )
-from roadrunner.infra.utils import logger
+from infra.utils import logger
 
 from ..db.db import get_db, store_conversation
 from ..models.llm import LLMClient

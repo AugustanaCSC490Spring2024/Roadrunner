@@ -1,6 +1,8 @@
 from datasets import load_dataset
 import tiktoken
 import torch
+import string
+from . import m
 
 enc = tiktoken.get_encoding("cl100k_base")
 
@@ -9,8 +11,8 @@ enc = tiktoken.encoding_for_model("gpt-4")
 
 batch_size = 16 # independent sequences to process in parallel
 block_size = 32 # maximum context length for predictions
-max_iters = 10000
-eval_interval = 100
+max_iters = 30000
+eval_interval = 20
 eval_iters = 200
 learning_rate = 1e-3
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -31,7 +33,7 @@ class Train:
     def download_data(self):
         self.text = load_dataset(self.dataset_name)
         interim = []
-        interim = (self._encode(sublist for sublist in self.text['train'][slice(None, self.rows, None)]['line']))
+        interim = [(self._encode(sublist)) for sublist in self.text['train'][slice(None, self.rows, None)]['line']]
         res = []
         for _ in interim:
             res.extend(_)
@@ -41,10 +43,17 @@ class Train:
         self.val_data = self.data[n:]
     
     def _encode(self, s):
-        return [enc.encode(word) for word in s]
+        encoded = []
+        for char in s:
+            try:
+                encoded.append(ord(char))
+            except UnicodeEncodeError:
+                encoded.append(ord('?')) 
+        return encoded
+
 
     def _decode(self, s):
-        return ''.join([enc.decode(s)])
+        return ''.join([chr(i) for i in s])
     
     #data loading
     def _get_batch(self, split):
@@ -87,9 +96,13 @@ class Train:
             optimizer.zero_grad(set_to_none=True)
             loss.backward()
             optimizer.step()
+    
+    def get_context(self, text):
+        encoded_text = torch.tensor(self._encode(text), dtype=torch.long, device=device).unsqueeze(0)
+        print(encoded_text)
+        context = torch.zeros((1, 1), dtype=torch.long, device=device)
+        print(context)
+        return self._decode(m.generate(encoded_text, max_new_tokens=500)[0].tolist())
 
-    
-    
-    
-    
-    
+
+

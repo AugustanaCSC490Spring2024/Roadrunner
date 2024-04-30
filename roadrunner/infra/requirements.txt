@@ -1,0 +1,18 @@
+databases
+email_validator
+fastapi
+Flask
+numpy
+openai
+passlib
+password_strength
+py_avataaars
+pydantic
+SQLAlchemy
+torch
+uvicorn
+openai-whisper @ git+https://github.com/openai/whisper.git
+aiosqlite
+litellm
+python-multipart
+bcrypt

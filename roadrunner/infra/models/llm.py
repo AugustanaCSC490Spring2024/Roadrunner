@@ -4,7 +4,7 @@ import traceback
 from litellm import acompletion, completion
 from openai import OpenAI
 
-from roadrunner.infra.utils import logger
+from infra.utils import logger
 
 from ..prompts import summary_prompt
 

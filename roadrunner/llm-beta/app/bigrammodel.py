@@ -11,7 +11,7 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 n_embd = 64
 n_head = 4
 n_layer = 4
-vocab_size = 200000
+vocab_size = 500
 
 # super simple bigram model
 class BigramLanguageModel(nn.Module):
@@ -62,5 +62,7 @@ class BigramLanguageModel(nn.Module):
             # append sampled index to the running sequence
             idx = torch.cat((idx, idx_next), dim=1) # (B, T+1)
         return idx
+    
+    
     
     

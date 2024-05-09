@@ -18,7 +18,7 @@ def log_conversation_endpoint(
 
 @router.get("/conversations", response_model=List[schemas.Conversation])
 def get_all_conversations(db: Session = Depends(get_db)):
-    return db.query(crud.Conversation).all()
+    return crud.get_all_conversations(db)
 
 
 @router.get("/conversations/{conversation_id}", response_model=schemas.Conversation)

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import numpy as np
 from fastapi import HTTPException
 from passlib.context import CryptContext
@@ -30,15 +32,15 @@ def fetch_user_by_email(db: Session, email: str) -> User:
     return db.query(User).filter(User.email == email).first()
 
 
+def fetch_user_by_username(db: Session, username: str) -> User:
+    return db.query(User).filter(User.username == username).first()
+
+
 def register_user(db: Session, user) -> User:
-    hashed_password = pwd_context.hash(user.password)
-    db_user = User(
-        username=user.username, email=user.email, hashed_password=hashed_password
-    )
-    db.add(db_user)
+    db.add(user)
     db.commit()
-    db.refresh(db_user)
-    return db_user
+    db.refresh(user)
+    return user
 
 
 def create_capture(db: Session, capture_data) -> Capture:
@@ -53,10 +55,15 @@ def create_capture(db: Session, capture_data) -> Capture:
 def create_conversation(
     db: Session, conversation_data: ConversationCreate
 ) -> Conversation:
-    log.info(f"Create conversation data: {conversation_data}")
-    new_conversation = Conversation(**conversation_data.model_dump())
+    log.info(f"Creating new conversation with data: {conversation_data}")
+    new_conversation = Conversation(
+        user_id=conversation_data.user_id,
+        context=conversation_data.context,
+        created_at=datetime.utcnow(),
+    )
     db.add(new_conversation)
     db.commit()
+    db.refresh()
     return new_conversation
 
 
@@ -66,13 +73,21 @@ def add_message_to_conversation(
     conversation = get_conversation(db, conversation_id)
     if not conversation:
         raise HTTPException(status_code=404, detail="Conversation not found")
-    conversation.context.append(messages)
+    if not isinstance(conversation.context, list):
+        conversation.context = []
+    conversation.context.extend([message.dict() for message in messages])
+    log.info(f"Conversation context: {conversation.context}")
     db.commit()
+    db.refresh(conversation)
     return conversation
 
 
 def get_conversation(db: Session, conversation_id: int) -> Conversation:
     return db.query(Conversation).filter(Conversation.id == conversation_id).first()
+
+
+def get_all_conversations(db: Session) -> list:
+    return db.query(Conversation).all()
 
 
 def get_all_captures(db: Session) -> list:

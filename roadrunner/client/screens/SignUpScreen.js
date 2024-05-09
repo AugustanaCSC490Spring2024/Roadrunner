@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -10,52 +10,45 @@ import {
 import { StatusBar } from "expo-status-bar";
 import Animated, { FadeIn, FadeInUp, FadeOut } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../contexts/authcontext";
+import axios from "axios";
 
-const SIGNUP_API_URL = "http://127.0.0.1:8000/signup";
+const SIGNUP_API_URL = "https://infra-67yyg4i2vq-uc.a.run.app/signup";
 
 export default function SignUpScreen() {
   const navigation = useNavigation();
   const {
     currentUser,
     setCurrentUser
-  } = useContext(CurrentUserContext);
+  } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSignUp = async () => {
     try {
-      const response = await fetch(SIGNUP_API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, email, password }),
+      const response = await axios.post(SIGNUP_API_URL, {
+        username: username,
+        email: email,
+        password: password
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        // Navigate to Home screen or perform any action on successful signup
-        navigation.navigate("Home");
+  
+      if (response.status === 200) {
+        const responseData = response.data;
+        console.log("Sign Up successful");
+        console.log("Response data:", responseData);
+       
+        //set current user
+        setCurrentUser(responseData['user_id'])
+        navigation.navigate("Home")
+        
       } else {
-        let errorText = "An error occurred. Please try again later.";
-        try {
-          const errorData = await response.json();
-          if (errorData && errorData.error) {
-            errorText = errorData.error;
-          }
-        } catch (error) {
-          console.error("Error parsing error response:", error);
-        }
-        console.error("Server error:", errorText);
-        Alert.alert("Error", errorText);
+        console.error("Sign Up failed:", response.status);
+        // Handle other status codes if needed
       }
     } catch (error) {
-      console.error("Network error:", error);
-      Alert.alert(
-        "Error",
-        "An error occurred. Please check your network connection and try again."
-      );
+      console.error("Error:", error);
+      // Handle network errors or other exceptions
     }
   };
 

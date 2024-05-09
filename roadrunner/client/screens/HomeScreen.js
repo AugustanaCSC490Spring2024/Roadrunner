@@ -11,6 +11,8 @@ import { styles } from "../constants/styles";
 import { darkStyles } from "../constants/darkStyle";
 import { Prompt, promptMessages } from "../prompts/prompts";
 import { AuthContext } from "../contexts/authcontext";
+const CHAT_API_URL = "https://infra-67yyg4i2vq-uc.a.run.app/chat";
+const UPDATE_API_URL = "https://infra-67yyg4i2vq-uc.a.run.app/update-conversation";
 
 export default function HomeScreen({ selectedTheme, onThemeChange }) {
   const [messages, setMessages] = useState([]);
@@ -23,7 +25,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
   const {
     currentUser,
     setCurrentUser
-  } = useContext(CurrentUserContext);
+  } = useContext(AuthContext);
 
   const navigation = useNavigation();
 

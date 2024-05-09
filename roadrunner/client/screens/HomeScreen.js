@@ -9,8 +9,8 @@ import Sidebar from "../components/sidebarComponent";
 import { styles } from "../constants/styles";
 import { darkStyles } from "../constants/darkStyle";
 import { Prompt, promptMessages } from "../prompts/prompts";
-import EventSource from "react-native-event-source";
-const API_URL = "http://127.0.0.1:8000/chat";
+const CHAT_API_URL = "http://127.0.0.1:8000/chat";
+const UPDATE_API_URL = "http://127.0.0.1:8000/update-conversation";
 
 export default function HomeScreen({ selectedTheme, onThemeChange }) {
   const [messages, setMessages] = useState([]);
@@ -51,15 +51,40 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
     console.log("Delete all chats");
   };
 
+  const updateConversation = async (conversationId, newMessages) => {
+    try {
+      const response = await fetch(`${UPDATE_API_URL}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          conversation_id: conversationId,
+          messages: newMessages,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const responseData = await response.json();
+      console.log("Conversation updated successfully:", responseData.message);
+    } catch (error) {
+      console.error("Error updating conversation:", error);
+    }
+  };
+
   // Function to send message
   const sendMessage = async (messageContent) => {
     try {
-      if (messageContent && messageContent.trim()) {
+      messageContent = messageContent.trim();
+      if (messageContent) {
         // Add user's request to messages
-        const userMessage = { role: "user", content: messageContent.trim() };
+        const userMessage = { role: "user", content: messageContent };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
 
-        const response = await fetch(`${API_URL}`, {
+        const response = await fetch(`${CHAT_API_URL}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -67,7 +92,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
           body: JSON.stringify({
             user_id: 1,
             conversation_id: 1,
-            message: messageContent.trim(),
+            message: messageContent,
           }),
         });
 
@@ -81,6 +106,8 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
           .replace(/\s{2,}/g, " ");
         const botMessage = { role: "assistant", content: cleanedResponse };
         setMessages((prevMessages) => [...prevMessages, botMessage]);
+        // Update conversation after sending the message
+        await updateConversation(1, [userMessage, botMessage]);
       }
     } catch (error) {
       console.error("Error fetching response:", error);

@@ -58,6 +58,11 @@ class ConversationCreate(ConversationBase):
     pass
 
 
+class UpdateConversationRequest(BaseModel):
+    conversation_id: int
+    messages: List[ConversationMessage]
+
+
 class ChatRequest(BaseModel):
     message: str
     conversation_id: Optional[int] = None

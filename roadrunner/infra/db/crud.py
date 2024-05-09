@@ -75,7 +75,14 @@ def add_message_to_conversation(
         conversation = get_conversation(db, conversation_id)
         if not conversation:
             raise HTTPException(status_code=404, detail="Conversation not found")
-        conversation.context.extend(messages)
+
+        if isinstance(conversation.context, str):
+            conversation.context = json.loads(conversation.context)
+        if not isinstance(conversation.context, list):
+            conversation.context = []
+        conversation.context.extend([msg.dict() for msg in messages])
+
+        conversation.context = json.dumps(conversation.context)
         db.commit()
         db.refresh(conversation)
         return conversation

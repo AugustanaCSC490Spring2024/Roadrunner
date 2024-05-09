@@ -96,7 +96,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            user_id: 1,
+            user_id: currentUser,
             conversation_id: 1,
             message: messageContent,
           }),

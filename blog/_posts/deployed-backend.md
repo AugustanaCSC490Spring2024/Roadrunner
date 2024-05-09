@@ -19,7 +19,7 @@ An environment variable OPENAI_API_KEY is set for accessing OpenAI services.
 
 Port 8000 is exposed to enable communication with services running inside the container. 
 Finally, it specifies the command to start the Uvicorn server, serving the application located at infra.main:app, 
-listening on host 0.0.0.0 and port 8000, with automatic reloading enabled for code changes.
+listening on host 0.0.0.0 and port 8080, with automatic reloading enabled for code changes.
 
 
 

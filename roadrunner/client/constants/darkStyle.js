@@ -15,16 +15,17 @@ const padding = (vertical, horizontal) => ({
   paddingHorizontal: horizontal,
 });
 
-export const styles = StyleSheet.create({
+export const darkStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#333", // Dark background color
   },
   headerContainer: {
     flexDirection: "row",
     justifyContent: "flex-start",
     ...padding(hp("2%"), wp("5%")),
     paddingBottom: hp("1%"),
+    backgroundColor: "#222", // Dark background color
   },
   sidebarButton: {
     padding: 10,
@@ -46,7 +47,7 @@ export const styles = StyleSheet.create({
   },
   messagesContainer: {
     flex: 1,
-    backgroundColor: "#D8E4D8",
+    backgroundColor: "#444", // Darker background color for messages container
     ...borderRadius(30),
     overflow: "hidden",
   },
@@ -59,7 +60,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     maxWidth: wp("70%"),
     alignSelf: "flex-end",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#666", // Darker background color for user messages
     ...borderRadius(25),
     ...padding(10, 10),
     marginBottom: 10,
@@ -70,13 +71,13 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     maxWidth: wp("70%"),
     alignSelf: "flex-start",
-    backgroundColor: "#CEEFCE",
+    backgroundColor: "#555", // Darker background color for assistant messages
     ...borderRadius(25),
     ...padding(10, 10),
     marginBottom: 10,
   },
   messageText: {
-    color: "#000000",
+    color: "#fff", // White text color for messages
     marginRight: 10,
   },
   inputContainer: {
@@ -86,10 +87,11 @@ export const styles = StyleSheet.create({
   input: {
     flex: 1,
     padding: 10,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#444", // Darker background color for input
     ...borderRadius(25),
     marginRight: 10,
     marginBottom: 10,
+    color: "#fff", // White text color for input
   },
   sendButton: {
     backgroundColor: "#007bff",
@@ -111,7 +113,7 @@ export const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   sidebar: {
-    backgroundColor: "white",
+    backgroundColor: "#222", // Dark background color for sidebar
     width: wp("60%"),
     height: "100%",
     paddingTop: hp("20%"),
@@ -121,22 +123,23 @@ export const styles = StyleSheet.create({
   sidebarItem: {
     paddingVertical: hp("1%"),
     borderBottomWidth: 1,
-    borderBottomColor: "lightgray",
+    borderBottomColor: "#555", // Darker border color for sidebar items
   },
   sidebarItemText: {
     fontSize: 18,
+    color: "#fff", // White text color for sidebar items
   },
   promptContainer: {
     bottom: 0,
     flexDirection: "row",
     justifyContent: "space-between",
     flexWrap: "wrap",
-    marginTop: 1000, 
+    marginTop: 1000,
     paddingBottom: hp("8%"),
     marginBottom: 20,
   },
   prompt: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#555", // Darker background color for prompts
     ...padding(10, 10),
     ...borderRadius(25),
     marginBottom: 10,
@@ -144,7 +147,7 @@ export const styles = StyleSheet.create({
     width: wp("48%"),
   },
   promptText: {
-    color: "#000000",
+    color: "#fff", // White text color for prompts
     textAlign: "center",
   },
   settingsPopupContainer: {
@@ -154,7 +157,7 @@ export const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   settingsPopup: {
-    backgroundColor: "#fff",
+    backgroundColor: "#444", // Darker background color for settings popup
     padding: 20,
     borderRadius: 10,
     width: "80%",
@@ -163,6 +166,7 @@ export const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "semibold",
     marginBottom: 10,
+    color: "#fff", // White text color for setting header
   },
   closeButton: {
     position: "absolute",
@@ -193,5 +197,4 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
-  
 });

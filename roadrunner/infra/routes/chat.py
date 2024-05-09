@@ -17,12 +17,12 @@ from infra.db.crud import (
 from infra.db.embeddings import get_relevant_records
 from infra.db.schemas import (
     ChatRequest,
-    ConversationBase,
     ConversationCreate,
+    UpdateConversationRequest,
 )
 from infra.utils import logger
 
-from ..db.db import get_db, store_conversation
+from ..db.db import get_db
 from ..models.llm import LLMClient
 
 log = logger.get_logger(__name__)
@@ -44,6 +44,7 @@ async def chat(request: ChatRequest, db: Session = Depends(get_db)):
     conversation = get_conversation(db, request.conversation_id)
     log.info(f"Conversation: {conversation}")
     if not conversation:
+        log.info("No conversation found, creating new one")
         conversation = create_conversation(
             db, ConversationCreate(user_id=request.user_id, context=[])
         )
@@ -51,13 +52,13 @@ async def chat(request: ChatRequest, db: Session = Depends(get_db)):
     log.info(f"Conversation id: {conversation.id}")
     chat_messages = conversation.context
 
-    # Add the current user message
+    # add the current user message
     user_message = {
         "role": "user",
         "content": request.message,
     }
     relevant_records = await get_relevant_records(db, request.message)
-    log.info(f"Relevant records: {relevant_records}")
+    # log.info(f"Relevant records: {relevant_records}")
 
     messages = (
         [llm_client.get_system_message(relevant_records)]
@@ -65,7 +66,7 @@ async def chat(request: ChatRequest, db: Session = Depends(get_db)):
         + [user_message]
     )
 
-    log.info(f"Chat messages: {messages}")
+    # log.info(f"Chat messages: {messages}")
 
     try:
         stream = await llm_client.async_completion(messages)
@@ -80,41 +81,10 @@ async def chat(request: ChatRequest, db: Session = Depends(get_db)):
     except Exception as e:
         print(f"error occurred: {traceback.format_exc()}")
 
-    # # Prepare response to the user
-    # new_message_data = [
-    #     user_message,
-    #     {"role": "assistant", "content": response, "timestamp": datetime.now()},
-    # ]
-
-    # # Save to database
-    # db_message = add_message_to_conversation(
-    #     db=db, conversation_id=conversation.id, messages=new_message_data
-    # )
-    # log.info(f"Conversation message id {db_message.id} saved to database")
-
-    # prompt = f"User: {request_data['message']}\nAssistant:"
-
-    # await store_conversation(
-    #     db, request_data["user_id"], request_data["message"]
-    # )
-    # try:
-    #     stream = await llm_client.async_completion(prompt)
-
-    #     async def generator():
-    #         async for chunk in stream:
-    #             print(chunk.choices[0].delta.content)
-    #             yield json.dumps(chunk.choices[0].delta.content or "")
-
-    #     response_messages = generator()
-    #     return StreamingResponse(response_messages, media_type="text/event-stream")
-    # except Exception as e:
-    #     print(f"error occurred: {traceback.format_exc()}")
-    #     pass
-
 
 @router.post("/update-conversation")
 async def update_conversation(
-    conversation_id: int, messages: List[dict], db: Session = Depends(get_db)
+    update_request: UpdateConversationRequest, db: Session = Depends(get_db)
 ):
     """
     Update the conversation with new messages.
@@ -122,14 +92,19 @@ async def update_conversation(
     :param messages: List of message dictionaries to add to the conversation.
     :param db: Database session dependency.
     """
+    conversation_id, messages = (
+        update_request.conversation_id,
+        update_request.messages,
+    )
+
+    log.info(f"Conversation id: {conversation_id}")
+    log.info(f"Messages: {messages}")
     try:
-        # Retrieve the existing conversation
         conversation = get_conversation(db, conversation_id)
         if not conversation:
             log.error(f"No conversation found with ID {conversation_id}")
             return {"error": "Conversation not found"}, 404
 
-        # Add new messages to the conversation
         add_message_to_conversation(
             db=db, conversation_id=conversation_id, messages=messages
         )

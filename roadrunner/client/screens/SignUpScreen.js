@@ -1,20 +1,74 @@
-import React from "react";
-import { View, Text, Image, TextInput, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import { StatusBar } from "expo-status-bar";
 import Animated, { FadeIn, FadeInUp, FadeOut } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
 
+const SIGNUP_API_URL = "http://127.0.0.1:8000/signup";
+
 export default function SignUpScreen() {
   const navigation = useNavigation();
+  const {
+    currentUser,
+    setCurrentUser
+  } = useContext(CurrentUserContext);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSignUp = async () => {
+    try {
+      const response = await fetch(SIGNUP_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, email, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Navigate to Home screen or perform any action on successful signup
+        navigation.navigate("Home");
+      } else {
+        let errorText = "An error occurred. Please try again later.";
+        try {
+          const errorData = await response.json();
+          if (errorData && errorData.error) {
+            errorText = errorData.error;
+          }
+        } catch (error) {
+          console.error("Error parsing error response:", error);
+        }
+        console.error("Server error:", errorText);
+        Alert.alert("Error", errorText);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      Alert.alert(
+        "Error",
+        "An error occurred. Please check your network connection and try again."
+      );
+    }
+  };
+
   return (
     <View style={{ backgroundColor: "white", height: "100%", width: "100%" }}>
       <StatusBar style="light" />
+      {/* Background Image */}
       <Image
         style={{ height: "100%", width: "100%", position: "absolute" }}
         source={require("../asset/images/background.png")}
       />
 
-      {/* light */}
+      {/* Light Images */}
       <View
         style={{
           flexDirection: "row",
@@ -35,77 +89,89 @@ export default function SignUpScreen() {
         />
       </View>
 
-      {/* light and form */}
-      <View className="h-full w-full flex justify-around pt-48 pb-10">
-        {/* Title */}
-        <View style={{ alignItems: "center" }}>
-          <Animated.Text
-            entering={FadeInUp.duration(1000).springify()}
-            style={{ color: "white", fontWeight: "bold", fontSize: 30 }}
-          >
-            Sign Up
-          </Animated.Text>
-        </View>
+      {/* Signup Form */}
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Animated.Text
+          entering={FadeInUp.duration(1000).springify()}
+          style={{ color: "white", fontWeight: "bold", fontSize: 30 }}
+        >
+          Sign Up
+        </Animated.Text>
 
-        {/* form */}
-        <View className="flex items-center mx-4 space-y-4">
+        <View style={{ marginTop: 20 }}>
           <Animated.View
             entering={FadeInUp.duration(1000).springify()}
-            className="bg-black/5 p-5 rounded-2xl w-full"
+            style={{
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              borderRadius: 10,
+              padding: 10,
+              marginBottom: 10,
+            }}
           >
             <TextInput
-              name="Username"
               placeholder="Username"
-              placeholderTextColor={"gray"}
+              placeholderTextColor="white"
+              style={{ color: "white" }}
+              value={username}
+              onChangeText={setUsername}
+            />
+          </Animated.View>
+
+          <Animated.View
+            entering={FadeInUp.duration(1000).springify()}
+            style={{
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              borderRadius: 10,
+              padding: 10,
+              marginBottom: 10,
+            }}
+          >
+            <TextInput
+              placeholder="Email"
+              placeholderTextColor="white"
+              style={{ color: "white" }}
+              value={email}
+              onChangeText={setEmail}
             />
           </Animated.View>
 
           <Animated.View
             entering={FadeInUp.duration(1000).delay(200).springify()}
-            className="bg-black/5 p-5 rounded-2xl w-full"
+            style={{
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              borderRadius: 10,
+              padding: 10,
+              marginBottom: 10,
+            }}
           >
             <TextInput
-              name="Email"
-              placeholder="Email"
-              placeholderTextColor={"gray"}
-            />
-          </Animated.View>
-
-          <Animated.View
-            entering={FadeInUp.duration(1000).delay(400).springify()}
-            className="bg-black/5 p-5 rounded-2xl w-full mb-3"
-          >
-            <TextInput
-              name="Password"
               placeholder="Password"
-              placeholderTextColor={"gray"}
+              placeholderTextColor="white"
               secureTextEntry
+              style={{ color: "white" }}
+              value={password}
+              onChangeText={setPassword}
             />
           </Animated.View>
 
-          <Animated.View
-            entering={FadeInUp.duration(1000).delay(600).springify()}
-            className="w-full"
+          <TouchableOpacity
+            onPress={handleSignUp}
+            style={{
+              backgroundColor: "#00bcd4",
+              padding: 10,
+              borderRadius: 10,
+              alignItems: "center",
+            }}
           >
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Home")}
-              className="w-full bg-sky-400 p-3 rounded-2xl mb-3"
-            >
-              <Text className="text-xl font bold text-white text-center">
-                Sign Up
-              </Text>
-            </TouchableOpacity>
-          </Animated.View>
+            <Text style={{ color: "white", fontWeight: "bold" }}>Sign Up</Text>
+          </TouchableOpacity>
 
-          <Animated.View
-            entering={FadeInUp.duration(1000).delay(800).springify()}
-            className="flex-row justify-center"
-          >
-            <Text>Already have an account? </Text>
+          <View style={{ flexDirection: "row", marginTop: 10 }}>
+            <Text style={{ color: "white" }}>Already have an account? </Text>
             <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-              <Text className="text-sky-600">Login</Text>
+              <Text style={{ color: "#00bcd4" }}>Login</Text>
             </TouchableOpacity>
-          </Animated.View>
+          </View>
         </View>
       </View>
     </View>

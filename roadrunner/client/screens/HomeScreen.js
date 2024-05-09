@@ -1,17 +1,18 @@
-import React, { useRef, useState, useContext } from "react";
-import { SafeAreaView, ScrollView, View } from "react-native";
 
+import React, { useRef, useState, useEffect, useContext } from "react";
+import { SafeAreaView, ScrollView, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import InputArea from "../components/InputAreaComponent";
 import Header from "../components/headerComponet";
 import Message from "../components/messageComponent";
 import Settings from "../components/settingsComponent";
 import Sidebar from "../components/sidebarComponent";
 import { styles } from "../constants/styles";
+import { darkStyles } from "../constants/darkStyle";
 import { Prompt, promptMessages } from "../prompts/prompts";
 import { AuthContext } from "../contexts/authcontext";
-const API_URL = "http://192.168.1.100:8000/chat";
 
-export default function HomeScreen() {
+export default function HomeScreen({ selectedTheme, onThemeChange }) {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState("");
   const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -23,6 +24,12 @@ export default function HomeScreen() {
     currentUser,
     setCurrentUser
   } = useContext(CurrentUserContext);
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    setTheme(selectedTheme || "light");
+  }, [selectedTheme]);
 
   const handleLogout = () => {
     console.log("User logged out");
@@ -48,23 +55,66 @@ export default function HomeScreen() {
     console.log("Delete all chats");
   };
 
-  const sendMessage = async (messageContent) => {
+  const updateConversation = async (conversationId, newMessages) => {
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch(`${UPDATE_API_URL}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          user_id: 1,
-          conversation_id: 1,
-          message: messageContent,
+          conversation_id: conversationId,
+          messages: newMessages,
         }),
       });
-      const jsonResponse = await response.json();
-      setResponse(jsonResponse.message);
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const responseData = await response.json();
+      console.log("Conversation updated successfully:", responseData.message);
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error updating conversation:", error);
+    }
+  };
+
+  // Function to send message
+  const sendMessage = async (messageContent) => {
+    try {
+      messageContent = messageContent.trim();
+      if (messageContent) {
+        // Add user's request to messages
+        const userMessage = { role: "user", content: messageContent };
+        setMessages((prevMessages) => [...prevMessages, userMessage]);
+
+        const response = await fetch(`${CHAT_API_URL}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: 1,
+            conversation_id: 1,
+            message: messageContent,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const textResponse = await response.text();
+        const cleanedResponse = textResponse
+          .replace(/["']/g, "")
+          .replace(/\s{2,}/g, " ");
+        const botMessage = { role: "assistant", content: cleanedResponse };
+        setMessages((prevMessages) => [...prevMessages, botMessage]);
+        // Update conversation after sending the message
+        await updateConversation(1, [userMessage, botMessage]);
+      }
+    } catch (error) {
+      console.error("Error fetching response:", error);
     }
   };
 
@@ -80,30 +130,62 @@ export default function HomeScreen() {
     setSidebarVisible(false); // Close sidebar
   };
 
+  // Function to handle theme change
+  const handleThemeChange = (newTheme) => {
+    setTheme(newTheme);
+    navigation.setOptions({ headerTitle: newTheme });
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={theme === "light" ? styles.container : darkStyles.container}
+    >
       {/* Use Header component */}
       <Header openSidebar={openSidebar} />
 
-      <View style={styles.separator} />
-      <View style={styles.chatContainer}>
+      <View
+        style={theme === "light" ? styles.separator : darkStyles.separator}
+      />
+      <View
+        style={
+          theme === "light" ? styles.chatContainer : darkStyles.chatContainer
+        }
+      >
         <ScrollView
-          style={styles.messagesContainer}
-          contentContainerStyle={styles.messagesContentContainer}
+          style={
+            theme === "light"
+              ? styles.messagesContainer
+              : darkStyles.messagesContainer
+          }
+          contentContainerStyle={
+            theme === "light"
+              ? styles.messagesContentContainer
+              : darkStyles.messagesContentContainer
+          }
           ref={scrollViewRef}
           onContentSizeChange={() =>
             scrollViewRef.current.scrollToEnd({ animated: true })
           }
         >
-          {/*Render prompts if showPrompts is true */}
-          <View style={styles.promptContainer}>
+          {/* Render prompts if showPrompts is true */}
+          <View
+            style={
+              theme === "light"
+                ? styles.promptContainer
+                : darkStyles.promptContainer
+            }
+          >
             {showPrompts &&
               promptMessages.map((prompt, index) => (
                 <Prompt
                   key={index}
                   prompt={prompt}
                   onPromptPress={handlePromptPress}
-                  style={styles.customPrompt} // Custom prompt styles from parent
+                  style={
+                    theme === "light"
+                      ? styles.customPrompt
+                      : darkStyles.customPrompt
+                  } // Custom prompt styles from parent
                 />
               ))}
           </View>
@@ -137,6 +219,7 @@ export default function HomeScreen() {
         onClose={toggleSettingsPopup}
         onArchiveChats={archiveAllChats}
         onDeleteChats={deleteAllChats}
+        onThemeChange={handleThemeChange}
       />
     </SafeAreaView>
   );

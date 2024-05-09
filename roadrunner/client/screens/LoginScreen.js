@@ -6,6 +6,10 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
+  const {
+    currentUser,
+    setCurrentUser
+  } = useContext(CurrentUserContext);
   return (
     <View style={{ backgroundColor: "white", height: "100%", width: "100%" }}>
       <StatusBar style="light" />

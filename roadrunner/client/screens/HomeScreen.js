@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import { SafeAreaView, ScrollView, View } from "react-native";
 
 import InputArea from "../components/InputAreaComponent";
@@ -8,6 +8,7 @@ import Settings from "../components/settingsComponent";
 import Sidebar from "../components/sidebarComponent";
 import { styles } from "../constants/styles";
 import { Prompt, promptMessages } from "../prompts/prompts";
+import { AuthContext } from "../contexts/authcontext";
 const API_URL = "http://192.168.1.100:8000/chat";
 
 export default function HomeScreen() {
@@ -18,6 +19,10 @@ export default function HomeScreen() {
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [theme, setTheme] = useState("light");
   const scrollViewRef = useRef();
+  const {
+    currentUser,
+    setCurrentUser
+  } = useContext(CurrentUserContext);
 
   const handleLogout = () => {
     console.log("User logged out");

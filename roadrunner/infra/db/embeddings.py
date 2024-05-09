@@ -2,8 +2,8 @@ import numpy as np
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from roadrunner.infra.models.llm import LLMClient
-from roadrunner.infra.utils import logger
+from infra.models.llm import LLMClient
+from infra.utils import logger
 
 from .models import Embedding
 

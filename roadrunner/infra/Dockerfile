@@ -10,6 +10,6 @@ COPY . /app/infra
 
 ENV OPENAI_API_KEY='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'
 
-EXPOSE 8000
+EXPOSE 5000
 
-CMD ["uvicorn", "infra.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "infra.main:app"]

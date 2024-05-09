@@ -1,4 +1,5 @@
 import uvicorn
+import os
 from fastapi import FastAPI
 
 from .db.db import database, engine, metadata
@@ -36,5 +37,7 @@ async def shutdown():
     await database.disconnect()
 
 
+port = int(os.environ.get('PORT', 5000))
+
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=port)

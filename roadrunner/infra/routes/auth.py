@@ -21,7 +21,7 @@ async def login(form_data: dict, db: Session = Depends(get_db)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
         )
-    return {"username": user.username, "email": user.email}
+    return {"username": user.username, "email": user.email,  "user_id": user.id}
 
 
 @router.post("/signup")
@@ -37,7 +37,7 @@ async def signup(signup_data: dict, db: Session = Depends(get_db)):
     hashed_password = hash_password(password)
     new_user = User(username=username, email=email, hashed_password=hashed_password)
     register_user(db, new_user)
-    return {"username": new_user.username, "email": new_user.email}
+    return {"username": new_user.username, "email": new_user.email, "user_id": new_user.id}
 
 
 @router.post("/logout")

@@ -33,7 +33,7 @@ async def signup(signup_data: dict, db: Session = Depends(get_db)):
     if fetch_user_by_email(db, email):
         raise HTTPException(status_code=400, detail="User already exists!")
     if user_validate_email(email) is None or not check_password_strength(password):
-        raise HTTPException(status_code=4000, detail="Invalid email or weak password")
+        raise HTTPException(status_code=400, detail="Invalid email or weak password")
     hashed_password = hash_password(password)
     new_user = User(username=username, email=email, hashed_password=hashed_password)
     register_user(db, new_user)

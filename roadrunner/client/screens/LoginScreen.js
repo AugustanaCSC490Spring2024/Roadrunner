@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -10,38 +10,43 @@ import {
 import { StatusBar } from "expo-status-bar";
 import Animated, { FadeIn, FadeInUp, FadeOut } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../contexts/authcontext";
+import axios from "axios";
+import HomeScreen from "./HomeScreen";
 
-const LOGIN_API_URL = "http://127.0.0.1:8000/login";
+const LOGIN_API_URL = "https://infra-67yyg4i2vq-uc.a.run.app/login";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
   const {
     currentUser,
     setCurrentUser
-  } = useContext(CurrentUserContext);
-  const [email, setEmail] = useState("");
+  } = useContext(AuthContext);
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
     try {
-      const response = await fetch(LOGIN_API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+      const response = await axios.post(LOGIN_API_URL, {
+        username: username,
+        password: password
       });
+  
+      if (response.status === 200) {
+        const responseData = response.data;
+        console.log("Login successful");
+        console.log("Response data:", responseData);
 
-      if (response.ok) {
-        const data = await response.json();
-        // Navigate to Home screen or perform any action on successful login
-        navigation.navigate("Home");
+        //set current user
+        setCurrentUser(responseData['user_id'])
+        navigation.navigate("Home")
       } else {
-        const errorData = await response.json();
-        Alert.alert("Error", errorData.error);
+        console.error("Login failed with status:", response.status);
+        // Handle other status codes if needed
       }
     } catch (error) {
       console.error("Error:", error);
+      // Handle network errors or other exceptions
     }
   };
 
@@ -95,11 +100,11 @@ export default function LoginScreen() {
             }}
           >
             <TextInput
-              placeholder="Email"
+              placeholder="Username"
               placeholderTextColor="white"
               style={{ color: "white" }}
-              value={email}
-              onChangeText={setEmail}
+              value={username}
+              onChangeText={setUsername}
             />
           </Animated.View>
 

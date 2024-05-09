@@ -18,6 +18,7 @@ export default function SignUpScreen() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSignUp = async () => {
     try {
@@ -143,13 +144,28 @@ export default function SignUpScreen() {
             <TextInput
               placeholder="Password"
               placeholderTextColor="white"
-              secureTextEntry
+              secureTextEntry={!showPassword} // Conditionally set secureTextEntry based on showPassword state
               style={{ color: "white" }}
               value={password}
               onChangeText={setPassword}
             />
           </Animated.View>
 
+          {/* Toggle Show Password Button */}
+          <TouchableOpacity
+            onPress={() => setShowPassword(!showPassword)} // Toggle showPassword state
+            style={{
+              alignSelf: "flex-end",
+              marginRight: 10,
+              marginBottom: 10,
+            }}
+          >
+            <Text style={{ color: "gray" }}>
+              {showPassword ? "Hide Password" : "Show Password"}
+            </Text>
+          </TouchableOpacity>
+
+          {/* Sign Up Button */}
           <TouchableOpacity
             onPress={handleSignUp}
             style={{
@@ -162,6 +178,7 @@ export default function SignUpScreen() {
             <Text style={{ color: "white", fontWeight: "bold" }}>Sign Up</Text>
           </TouchableOpacity>
 
+          {/* Login Link */}
           <View style={{ flexDirection: "row", marginTop: 10 }}>
             <Text style={{ color: "white" }}>Already have an account? </Text>
             <TouchableOpacity onPress={() => navigation.navigate("Login")}>

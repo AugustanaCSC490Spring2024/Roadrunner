@@ -11,6 +11,7 @@ import { darkStyles } from "../constants/darkStyle";
 import { Prompt, promptMessages } from "../prompts/prompts";
 const CHAT_API_URL = "http://127.0.0.1:8000/chat";
 const UPDATE_API_URL = "http://127.0.0.1:8000/update-conversation";
+const GET_SINGLE_MESSAGE_API_URL = "http://127.0.0.1:8000/conversations/1"
 
 export default function HomeScreen({ selectedTheme, onThemeChange }) {
   const [messages, setMessages] = useState([]);
@@ -29,6 +30,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
 
   const handleLogout = () => {
     console.log("User logged out");
+    navigation.navigate("Login");
     setSidebarVisible(false);
   };
 

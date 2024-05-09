@@ -17,9 +17,11 @@ export default function LoginScreen() {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State for showing password
 
   const handleLogin = async () => {
-    try {
+    navigation.navigate("Home");
+    {/*try {
       const response = await fetch(LOGIN_API_URL, {
         method: "POST",
         headers: {
@@ -27,19 +29,26 @@ export default function LoginScreen() {
         },
         body: JSON.stringify({ email, password }),
       });
-
+  
       if (response.ok) {
         const data = await response.json();
         // Navigate to Home screen or perform any action on successful login
         navigation.navigate("Home");
       } else {
-        const errorData = await response.json();
-        Alert.alert("Error", errorData.error);
+        // Log the entire response body for debugging
+        const responseBody = await response.text();
+        console.error("Server response:", responseBody);
+        Alert.alert("Error", "An error occurred. Please try again later.");
       }
     } catch (error) {
       console.error("Error:", error);
-    }
+      Alert.alert(
+        "Error",
+        "An error occurred. Please check your network connection and try again."
+      );
+    } */}
   };
+  
 
   return (
     <View style={{ backgroundColor: "white", height: "100%", width: "100%" }}>
@@ -111,12 +120,26 @@ export default function LoginScreen() {
             <TextInput
               placeholder="Password"
               placeholderTextColor="white"
-              secureTextEntry
+              secureTextEntry={!showPassword} // Toggle secureTextEntry based on showPassword state
               style={{ color: "white" }}
               value={password}
               onChangeText={setPassword}
             />
           </Animated.View>
+
+          {/* Toggle Show Password Button */}
+          <TouchableOpacity
+            onPress={() => setShowPassword(!showPassword)} // Toggle showPassword state
+            style={{
+              alignSelf: "flex-end",
+              marginRight: 10,
+              marginBottom: 10,
+            }}
+          >
+            <Text style={{ color: "gray" }}>
+              {showPassword ? "Hide Password" : "Show Password"}
+            </Text>
+          </TouchableOpacity>
 
           <TouchableOpacity
             onPress={handleLogin}

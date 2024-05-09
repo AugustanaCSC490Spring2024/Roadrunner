@@ -63,24 +63,3 @@ async def store_capture_database(
         db.rollback()  # Rollback the session in case of error
         logger.error(f"Error storing data in database: {e}")
         raise e
-
-
-async def store_conversation(
-    db: Session, user_id: int, user_message: str, assistant_response: str
-):
-    try:
-        conversation_data = {
-            "user_id": user_id,
-            "context": {
-                "user_message": user_message,
-                "assistant_response": assistant_response,
-            },
-            "created_at": datetime.utcnow(),
-        }
-        conversation = Conversation(**conversation_data)
-        db.add(conversation)
-        db.commit()
-        logger.info("Conversation stored in database successfully.")
-    except Exception as e:
-        logger.error(f"Error storing conversation in database: {e}")
-        raise e

@@ -1,10 +1,37 @@
+import json
 from datetime import datetime
 
-from sqlalchemy import JSON, Column, DateTime, ForeignKey, Integer, PickleType, String
+from sqlalchemy import (
+    JSON,
+    VARCHAR,
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    PickleType,
+    String,
+    TypeDecorator,
+)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 Base = declarative_base()
+
+
+class JSONEncodedDict(TypeDecorator):
+    """Enables JSON storage by encoding and decoding on the fly."""
+
+    impl = VARCHAR
+
+    def process_bind_param(self, value, dialect):
+        if value is not None:
+            value = json.dumps(value)
+        return value
+
+    def process_result_value(self, value, dialect):
+        if value is not None:
+            value = json.loads(value)
+        return value
 
 
 class Capture(Base):
@@ -24,7 +51,7 @@ class Conversation(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
-    context = Column(JSON, nullable=False)  # JSON to store user and assistant messages
+    context = Column(JSONEncodedDict, nullable=False)
 
     user = relationship("User", back_populates="conversations")
 

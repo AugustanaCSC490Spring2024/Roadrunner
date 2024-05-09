@@ -1,7 +1,7 @@
 ---
 title: "Deployed backend to GCP"
 excerpt: "Our infrastructure has been containerized, and deployed to GCP to allow deployment of the app"
-coverImage: "/assets/blog/gcp/image.jpeg"
+coverImage: "/assets/blog/gcp/img-gcp.jpg"
 date: "2024-26-14"
 author:
   name: Joshua Fosu-Agyemang
@@ -19,7 +19,7 @@ An environment variable OPENAI_API_KEY is set for accessing OpenAI services.
 
 Port 8000 is exposed to enable communication with services running inside the container. 
 Finally, it specifies the command to start the Uvicorn server, serving the application located at infra.main:app, 
-listening on host 0.0.0.0 and port 8000, with automatic reloading enabled for code changes.
+listening on host 0.0.0.0 and port 8080, with automatic reloading enabled for code changes.
 
 
 

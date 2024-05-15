@@ -44,7 +44,6 @@ def upgrade() -> None:
             sa.PrimaryKeyConstraint("id"),
             sa.UniqueConstraint("email"),
             sa.UniqueConstraint("username"),
-            checkfirst=True,
         )
     if not engine.dialect.has_table(engine, "captures"):
         op.create_table(
@@ -60,7 +59,6 @@ def upgrade() -> None:
                 ["users.id"],
             ),
             sa.PrimaryKeyConstraint("id"),
-            checkfirst=True,
         )
     if not engine.dialect.has_table(engine, "conversations"):
         op.create_table(

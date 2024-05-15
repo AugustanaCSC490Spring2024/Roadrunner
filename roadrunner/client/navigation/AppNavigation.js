@@ -22,4 +22,4 @@ function AppNavigation() {
   );
 }
 
-export default AppNxavigation;
+export default AppNavigation;

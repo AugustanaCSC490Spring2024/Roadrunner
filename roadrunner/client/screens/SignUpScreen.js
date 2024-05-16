@@ -13,13 +13,13 @@ import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../contexts/authcontext";
 import axios from "axios";
 
-const SIGNUP_API_URL = "https://infra-67yyg4i2vq-uc.a.run.app/signup";
+const SIGNUP_API_URL = "http://127.0.0.1:8000/signup";
 
 export default function SignUpScreen() {
   const navigation = useNavigation();
   const {
-    currentUser,
-    setCurrentUser
+    autb,
+    setAuth
   } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -39,7 +39,7 @@ export default function SignUpScreen() {
         console.log("Response data:", responseData);
        
         //set current user
-        setCurrentUser(responseData['user_id'])
+        setAuth(responseData)
         navigation.navigate("Home")
         
       } else {

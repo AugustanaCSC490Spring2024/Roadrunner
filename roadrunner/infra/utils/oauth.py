@@ -19,10 +19,10 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 def authenticate_user( form_data, db: Session):
-    user = fetch_user_by_username(db, form_data["username"])
+    user = fetch_user_by_username(db, form_data.username)
     if not user:
         return False
-    if not user.hashed_password == hash_password(form_data["password"]):
+    if not user.hashed_password == hash_password(form_data.password):
         return False
     return user
 
@@ -61,6 +61,6 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Se
 async def get_current_active_user(
     current_user: Annotated[User, Depends(get_current_user)],
 ):
-    if current_user.disabled:
+    if current_user is None:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user

@@ -11,8 +11,8 @@ import { styles } from "../constants/styles";
 import { darkStyles } from "../constants/darkStyle";
 import { Prompt, promptMessages } from "../prompts/prompts";
 import { AuthContext } from "../contexts/authcontext";
-const CHAT_API_URL = "https://infra-67yyg4i2vq-uc.a.run.app/chat";
-const UPDATE_API_URL = "https://infra-67yyg4i2vq-uc.a.run.app/update-conversation";
+const CHAT_API_URL = "http://127.0.0.1:8000/chat";
+const UPDATE_API_URL = "http://127.0.0.1:8000/update-conversation";
 
 export default function HomeScreen({ selectedTheme, onThemeChange }) {
   const [messages, setMessages] = useState([]);
@@ -23,8 +23,8 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
   const [theme, setTheme] = useState("light");
   const scrollViewRef = useRef();
   const {
-    currentUser,
-    setCurrentUser
+    auth,
+    setAuth
   } = useContext(AuthContext);
 
   const navigation = useNavigation();
@@ -94,9 +94,9 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": auth.token_type + auth.access_token,
           },
           body: JSON.stringify({
-            user_id: currentUser,
             conversation_id: 1,
             message: messageContent,
           }),

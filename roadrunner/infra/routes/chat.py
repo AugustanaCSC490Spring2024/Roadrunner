@@ -3,7 +3,7 @@ import datetime
 import json
 import os
 import traceback
-from typing import List
+from typing import List, Annotated
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import StreamingResponse
@@ -24,6 +24,8 @@ from infra.utils import logger
 
 from ..db.db import get_db
 from ..models.llm import LLMClient
+from ..utils.oauth import get_current_active_user
+from ..db.schemas import User
 
 log = logger.get_logger(__name__)
 
@@ -34,11 +36,11 @@ llm_client = LLMClient()
 
 
 @router.post("/chat")
-async def chat(request: ChatRequest, db: Session = Depends(get_db)):
+async def chat(current_user: Annotated[User, Depends(get_current_active_user)], request: ChatRequest, db: Session = Depends(get_db)):
 
     log.info(f"User conversation id: {request.conversation_id}")
     log.info(f"User message: {request.message}")
-    log.info(f"User id: {request.user_id}")
+    log.info(f"User id: {current_user.id}")
 
     # get conversation
     conversation = get_conversation(db, request.conversation_id)
@@ -46,7 +48,7 @@ async def chat(request: ChatRequest, db: Session = Depends(get_db)):
     if not conversation:
         log.info("No conversation found, creating new one")
         conversation = create_conversation(
-            db, ConversationCreate(user_id=request.user_id, context=[])
+            db, ConversationCreate(user_id=current_user.id, context=[])
         )
 
     log.info(f"Conversation id: {conversation.id}")

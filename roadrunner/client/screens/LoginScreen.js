@@ -14,23 +14,40 @@ import { AuthContext } from "../contexts/authcontext";
 import axios from "axios";
 import HomeScreen from "./HomeScreen";
 
-const LOGIN_API_URL = "https://infra-67yyg4i2vq-uc.a.run.app/login";
+const LOGIN_API_URL = "http://127.0.0.1:8000/login";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
   const {
-    currentUser,
-    setCurrentUser
+    auth,
+    setAuth
   } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async () => {
-    try {
-      const response = await axios.post(LOGIN_API_URL, {
+  const options = {
+    method: 'POST',
+    url: 'http://127.0.0.1:8000/login',
+    params: { 'api-version': '3.0' },
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": auth.token_type + auth.access_token,
+    },
+    data: 
+      {
         username: username,
         password: password
-      });
+      },
+  
+};
+
+
+
+
+  const handleLogin = async () => {
+    try {
+      console.log("Came here for login")
+      const response = await axios.request(options);
   
       if (response.status === 200) {
         const responseData = response.data;
@@ -38,7 +55,7 @@ export default function LoginScreen() {
         console.log("Response data:", responseData);
 
         //set current user
-        setCurrentUser(responseData['user_id'])
+        setAuth(responseData)
         navigation.navigate("Home")
       } else {
         console.error("Login failed with status:", response.status);

@@ -12,7 +12,9 @@ from sqlalchemy.orm import Session
 from infra.db.crud import (
     add_message_to_conversation,
     create_conversation,
+    get_all_conversations_by_user,
     get_conversation,
+    get_all_messages_by_user
 )
 from infra.db.embeddings import get_relevant_records
 from infra.db.schemas import (
@@ -22,7 +24,7 @@ from infra.db.schemas import (
 )
 from infra.utils import logger
 
-from ..db.db import get_db
+from ..db.db import get_db, store_message
 from ..models.llm import LLMClient
 from ..utils.oauth import get_current_active_user
 from ..db.schemas import User
@@ -86,7 +88,7 @@ async def chat(current_user: Annotated[User, Depends(get_current_active_user)], 
 
 @router.post("/update-conversation")
 async def update_conversation(
-    update_request: UpdateConversationRequest, db: Session = Depends(get_db)
+    current_user: Annotated[User, Depends(get_current_active_user)], update_request: UpdateConversationRequest, db: Session = Depends(get_db)
 ):
     """
     Update the conversation with new messages.
@@ -117,3 +119,10 @@ async def update_conversation(
         db.rollback()
         log.error(f"Failed to update conversation: {str(e)}")
         return {"error": "Failed to update conversation"}, 500
+
+
+@router.get('/get-history')
+async def get_history(current_user: Annotated[User, Depends(get_current_active_user)], db: Session = Depends(get_db)):
+    res = get_all_messages_by_user(db, current_user.id)
+    print(res)
+    return res, 200

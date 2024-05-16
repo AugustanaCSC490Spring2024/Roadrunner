@@ -63,6 +63,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": auth["token_type"] + " " + auth["access_token"],
         },
         body: JSON.stringify({
           conversation_id: conversationId,
@@ -73,7 +74,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-
+      console.log("Response: ", response)
       const responseData = await response.json();
       console.log("Conversation updated successfully:", responseData.message);
     } catch (error) {

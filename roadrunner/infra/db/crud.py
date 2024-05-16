@@ -15,7 +15,7 @@ from infra.utils import logger
 log = logger.get_logger(__name__)
 
 
-from .models import Capture, Conversation, Embedding, User
+from .models import Capture, Conversation, Embedding, User, Message
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -90,6 +90,11 @@ def get_conversation(db: Session, conversation_id: int) -> Conversation:
 def get_all_conversations(db: Session) -> list:
     return db.query(Conversation).all()
 
+def get_all_conversations_by_user(db: Session, user_id: int) -> list:
+    return db.query(Conversation).filter(Conversation.user_id == user_id).all()
+
+def get_all_messages_by_user(db: Session, user_id: int) -> list:
+    return db.query(Message).filter(Message.user_id == user_id).all()
 
 def get_all_captures(db: Session) -> list:
     return db.query(Capture).all()

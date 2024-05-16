@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -31,7 +31,7 @@ export default function LoginScreen() {
     params: { 'api-version': '3.0' },
     headers: {
       "Content-Type": "application/json",
-      "Authorization": auth["token_type"] + auth["access_token"],
+      "Authorization": auth["token_type"] + " "+ auth["access_token"],
     },
     data: 
       {
@@ -39,9 +39,7 @@ export default function LoginScreen() {
         password: password
       },
   
-};
-
-
+  };
 
 
   const handleLogin = async () => {
@@ -51,12 +49,9 @@ export default function LoginScreen() {
   
       if (response.status === 200) {
         const responseData = response.data;
-        console.log("Login successful");
-        console.log("Response data:", responseData);
 
         //set current user
         setAuth(responseData)
-        console.log("response", responseData)
         navigation.navigate("Home")
       } else {
         console.error("Login failed with status:", response.status);

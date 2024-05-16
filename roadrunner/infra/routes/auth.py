@@ -1,3 +1,4 @@
+from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -8,7 +9,7 @@ from ..db.db import get_db
 from ..db.models import User
 from ..utils.emailvalidator import user_validate_email
 from ..utils.password_hash_algorithm import check_password_strength, hash_password
-from ..utils.oauth import authenticate_user, create_access_token
+from ..utils.oauth import authenticate_user, create_access_token, get_current_active_user
 from ..db.schemas import Token, UserLogin
 
 router = APIRouter()

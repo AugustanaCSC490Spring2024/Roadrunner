@@ -1,27 +1,17 @@
-import React, { useState, useContext } from "react";
-import {
-  View,
-  Text,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
-import { StatusBar } from "expo-status-bar";
-import Animated, { FadeIn, FadeInUp, FadeOut } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
-import { AuthContext } from "../contexts/authcontext";
 import axios from "axios";
-import HomeScreen from "./HomeScreen";
+import { StatusBar } from "expo-status-bar";
+import React, { useContext, useState } from "react";
+import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import Animated, { FadeInUp } from "react-native-reanimated";
+import { API_URL } from "../constants/config";
+import { AuthContext } from "../contexts/authcontext";
 
-const LOGIN_API_URL = "https://infra-67yyg4i2vq-uc.a.run.app/login";
+const LOGIN_API_URL = API_URL + "/login";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
-  const {
-    currentUser,
-    setCurrentUser
-  } = useContext(AuthContext);
+  const { currentUser, setCurrentUser } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -29,17 +19,17 @@ export default function LoginScreen() {
     try {
       const response = await axios.post(LOGIN_API_URL, {
         username: username,
-        password: password
+        password: password,
       });
-  
+
       if (response.status === 200) {
         const responseData = response.data;
         console.log("Login successful");
         console.log("Response data:", responseData);
 
         //set current user
-        setCurrentUser(responseData['user_id'])
-        navigation.navigate("Home")
+        setCurrentUser(responseData["user_id"]);
+        navigation.navigate("Home");
       } else {
         console.error("Login failed with status:", response.status);
         // Handle other status codes if needed

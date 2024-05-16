@@ -1,18 +1,25 @@
-import pyaudio
-import wave
-from pydub import AudioSegment
 import os
+import wave
+
+import pyaudio
+from pydub import AudioSegment
 
 # Set parameters
 RATE = 48000
 CHUNK = 1024
 FORMAT = pyaudio.paInt16
-CHANNELS = 2
+CHANNELS = 1  # 1 for mac, 2 for pi
 RECORD_SECONDS = 10
 FOLDER_LOCATION = "audio/"
 
+
 def countfile(directory):
     return os.listdir(directory)
+
+
+# Create the folder if it doesn't exist
+if not os.path.exists(FOLDER_LOCATION):
+    os.makedirs(FOLDER_LOCATION)
 
 count = 0
 while count < 100:
@@ -26,16 +33,14 @@ while count < 100:
             print("File cannot be removed")
 
     WAVE_OUTPUT_FILENAME = FOLDER_LOCATION + "output" + str(count) + ".wav"
-    MP3_OUTPUT_FILENAME = FOLDER_LOCATION + "output"+ str(count) + ".mp3"
+    MP3_OUTPUT_FILENAME = FOLDER_LOCATION + "output" + str(count) + ".mp3"
     # Initialize PyAudio
     p = pyaudio.PyAudio()
 
     # Open a stream for recording
-    stream = p.open(rate=RATE,
-                    channels=CHANNELS,
-                    format=FORMAT,
-                    input=True,
-                    frames_per_buffer=CHUNK)
+    stream = p.open(
+        rate=RATE, channels=CHANNELS, format=FORMAT, input=True, frames_per_buffer=CHUNK
+    )
 
     print("Recording initiated")
 
@@ -55,11 +60,11 @@ while count < 100:
     p.terminate()
 
     # Save the recorded audio frames as a WAVE file
-    wf = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+    wf = wave.open(WAVE_OUTPUT_FILENAME, "wb")
     wf.setnchannels(CHANNELS)
     wf.setsampwidth(p.get_sample_size(FORMAT))
     wf.setframerate(RATE)
-    wf.writeframes(b''.join(frames))
+    wf.writeframes(b"".join(frames))
     wf.close()
 
     # Convert the WAVE file to MP3

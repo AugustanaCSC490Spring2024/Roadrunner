@@ -1,7 +1,8 @@
+import json
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 
 class UserBase(BaseModel):
@@ -38,6 +39,10 @@ class ConversationBase(BaseModel):
     user_id: int
     created_at: Optional[datetime] = None
     context: List["ConversationMessage"] = []
+
+    @validator("context", pre=True, each_item=False)
+    def parse_json(cls, v):
+        return json.loads(v) if isinstance(v, str) else v
 
 
 class Conversation(ConversationBase):

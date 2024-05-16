@@ -17,6 +17,30 @@ The Roadrunner project is structured into several key components, ensuring a cle
 
 ## Usage
 
+### Running the Project
+
+To run the Roadrunner project locally, clone the repository, navigate to the project's root directory, and install the dependencies:
+
+```sh
+make setup
+```
+
+Create virtual environment
+
+```sh
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Then, start the FastAPI server in root directory:
+
+```sh
+export OPENAI_API_KEY='your_open_ai_api_key'
+make client # start react native app
+make record # start pi server to record audio
+make server # start infra fastapi server
+```
+
 ### API
 
 Our infra exposes several APIs. Recommend using Postman
@@ -31,27 +55,6 @@ To upload an audio file for processing, use the `/audio` endpoint with a form-da
 
 ```bash
 curl -X POST -F "audio=@./roadrunner/tests/data/audio/test_session.wav" http://127.0.0.1:8000/audio
-```
-
-### Running the Project
-
-To run the Roadrunner project locally, clone the repository, navigate to the project directory, and install the dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-Create virtual environment
-```
-python3 -m venv venv
-source venv/bin/activate
-```
-
-Then, start the FastAPI server in root directory:
-
-```bash
-export OPENAI_API_KEY='your_open_ai_api_key'
-uvicorn roadrunner.infra.main:app --reload
 ```
 
 ## Technology Used

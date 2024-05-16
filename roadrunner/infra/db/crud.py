@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 import numpy as np
@@ -71,23 +72,32 @@ def create_conversation(
 def add_message_to_conversation(
     db: Session, conversation_id: int, messages: list[ConversationMessage]
 ) -> Conversation:
-    conversation = get_conversation(db, conversation_id)
-    if not conversation:
-        raise HTTPException(status_code=404, detail="Conversation not found")
-    if not isinstance(conversation.context, list):
-        conversation.context = []
-    conversation.context.extend([message.dict() for message in messages])
-    log.info(f"Conversation context: {conversation.context}")
-    db.commit()
-    db.refresh(conversation)
-    return conversation
+    try:
+        conversation = get_conversation(db, conversation_id)
+        if not conversation:
+            raise HTTPException(status_code=404, detail="Conversation not found")
+
+        if isinstance(conversation.context, str):
+            conversation.context = json.loads(conversation.context)
+        if not isinstance(conversation.context, list):
+            conversation.context = []
+        conversation.context.extend([msg.dict() for msg in messages])
+
+        conversation.context = json.dumps(conversation.context)
+        db.commit()
+        db.refresh(conversation)
+        return conversation
+    except Exception as e:
+        db.rollback()
+        log.error(f"Failed to add messages to conversation: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update conversation")
 
 
 def get_conversation(db: Session, conversation_id: int) -> Conversation:
     return db.query(Conversation).filter(Conversation.id == conversation_id).first()
 
 
-def get_all_conversations(db: Session) -> list:
+def get_all_conversations(db: Session) -> list[Conversation]:
     return db.query(Conversation).all()
 
 def get_all_conversations_by_user(db: Session, user_id: int) -> list:

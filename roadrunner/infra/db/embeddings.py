@@ -1,9 +1,8 @@
 import numpy as np
-from sqlalchemy import func
-from sqlalchemy.orm import Session
-
 from infra.models.llm import LLMClient
 from infra.utils import logger
+from sqlalchemy import func
+from sqlalchemy.orm import Session
 
 from .models import Embedding
 

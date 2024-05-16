@@ -31,7 +31,7 @@ export default function LoginScreen() {
     params: { 'api-version': '3.0' },
     headers: {
       "Content-Type": "application/json",
-      "Authorization": auth.token_type + auth.access_token,
+      "Authorization": auth["token_type"] + auth["access_token"],
     },
     data: 
       {
@@ -56,6 +56,7 @@ export default function LoginScreen() {
 
         //set current user
         setAuth(responseData)
+        console.log("response", responseData)
         navigation.navigate("Home")
       } else {
         console.error("Login failed with status:", response.status);

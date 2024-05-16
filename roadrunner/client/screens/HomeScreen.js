@@ -89,12 +89,13 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
         // Add user's request to messages
         const userMessage = { role: "user", content: messageContent };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
-
+        console.log("Sent messages to LLM")
+        console.log(auth["token_type"] + auth["access_token"])
         const response = await fetch(`${CHAT_API_URL}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": auth.token_type + auth.access_token,
+            "Authorization": auth["token_type"] + " " +auth["access_token"],
           },
           body: JSON.stringify({
             conversation_id: 1,

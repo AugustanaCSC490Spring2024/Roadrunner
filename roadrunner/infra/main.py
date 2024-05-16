@@ -21,7 +21,7 @@ app.include_router(auth_router)
 
 @app.get("/")
 async def root():
-    return "Hello from roadrunner"
+    return "Hello from Roadrunner!"
 
 
 Base.metadata.create_all(bind=engine)

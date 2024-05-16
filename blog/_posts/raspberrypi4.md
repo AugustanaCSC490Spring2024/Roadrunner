@@ -1,13 +1,13 @@
 ---
 title: "Raspberry Pi recording and saving audio to file"
 excerpt: "Test out the capability of RP4 to record and saving file."
-coverImage: "/assets/blog/raspberrypi4/rp4.png"
+coverImage: "/assets/blog/raspberrypi4/rp4.jpeg"
 date: "2024-04-04"
 author:
   name: Viet M. Bui
   # picture: "/assets/blog/authors/tim.jpeg"
 ogImage:
-  url: "/assets/blog/raspberrypi4/rp4.png"
+  url: "/assets/blog/raspberrypi4/rp4.jpeg"
 ---
 
 ```python
@@ -83,7 +83,7 @@ while count < 100:
     count = count + 1
 ```
 
-Since I cannot always commit all the files on raspberry pi so I just drop all of my works on this blog. 
+Since I cannot always commit all the files on raspberry pi so I just drop all of my works on this blog.
 
 The biggest issue and concerns in remote ssh in to the pi and also have to deal with the potential of carrying the pi to a different wifi network and attempt to connect that into the network.
 

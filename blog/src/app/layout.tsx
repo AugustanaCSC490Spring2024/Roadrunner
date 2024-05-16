@@ -10,6 +10,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: `Roadrunner Devlog`,
   description: `A devlog from our team Roadrunner - wearable AI assistant`,
+  metadataBase: new URL("https://roadrunner-csc490.vercel.app/"),
   openGraph: {
     images: [HOME_OG_IMAGE_URL],
   },

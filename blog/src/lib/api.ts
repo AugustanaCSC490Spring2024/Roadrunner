@@ -23,7 +23,6 @@ export function getAllPosts(): Post[] {
   const posts = slugs
     .map((slug) => getPostBySlug(slug))
     .filter((post) => {
-      console.log("isDraft", post.isDraft);
       return !post.isDraft;
     })
     // sort posts by date in descending order

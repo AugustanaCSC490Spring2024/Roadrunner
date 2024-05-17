@@ -1,5 +1,6 @@
-import uvicorn
 import os
+
+import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -13,15 +14,7 @@ from .routes.user import router as user_router
 
 app = FastAPI()
 
-
-origins = [
-    "http://localhost.tiangolo.com",
-    "https://localhost.tiangolo.com",
-    "http://localhost",
-    "http://localhost:8080",
-    "http://localhost:8000",
-    "http://localhost:8081"
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -31,6 +24,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> fdb978bfb9c2b4df736544677903176c193c7311
 app.include_router(user_router)
 app.include_router(audio_router)
 app.include_router(chat_router)
@@ -56,7 +53,7 @@ async def shutdown():
     await database.disconnect()
 
 
-port = int(os.environ.get('PORT', 8080))
+port = int(os.environ.get("PORT", 8080))
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=port)

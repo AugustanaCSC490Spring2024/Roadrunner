@@ -7,8 +7,6 @@ from typing import List, Annotated
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import StreamingResponse
-from sqlalchemy.orm import Session
-
 from infra.db.crud import (
     add_message_to_conversation,
     create_conversation,
@@ -17,12 +15,9 @@ from infra.db.crud import (
     get_all_messages_by_user
 )
 from infra.db.embeddings import get_relevant_records
-from infra.db.schemas import (
-    ChatRequest,
-    ConversationCreate,
-    UpdateConversationRequest,
-)
+from infra.db.schemas import ChatRequest, ConversationCreate, UpdateConversationRequest
 from infra.utils import logger
+from sqlalchemy.orm import Session
 
 from ..db.db import get_db
 from ..models.llm import LLMClient
@@ -56,21 +51,22 @@ async def chat(current_user: Annotated[User, Depends(get_current_active_user)], 
     log.info(f"Conversation id: {conversation.id}")
     chat_messages = conversation.context
 
+    if not isinstance(chat_messages, list):
+        chat_messages = json.loads(chat_messages)
+
     # add the current user message
     user_message = {
         "role": "user",
         "content": request.message,
     }
     relevant_records = await get_relevant_records(db, request.message)
-    log.info(f"Relevant records: {relevant_records}")
+    system_message = llm_client.get_system_message(relevant_records)
+    if not isinstance(system_message, list):
+        system_message = [system_message]
 
-    messages = (
-        [llm_client.get_system_message(relevant_records)]
-        + [chat_messages]
-        + [user_message]
-    )
+    messages = system_message + chat_messages + [user_message]
 
-    # log.info(f"Chat messages: {messages}")
+    log.info(f"Chat messages: {messages}")
 
     try:
         stream = await llm_client.async_completion(messages)

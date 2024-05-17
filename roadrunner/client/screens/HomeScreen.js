@@ -1,18 +1,18 @@
-
-import React, { useRef, useState, useEffect, useContext } from "react";
-import { SafeAreaView, ScrollView, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { SafeAreaView, ScrollView, View } from "react-native";
 import InputArea from "../components/InputAreaComponent";
 import Header from "../components/headerComponet";
 import Message from "../components/messageComponent";
 import Settings from "../components/settingsComponent";
 import Sidebar from "../components/sidebarComponent";
-import { styles } from "../constants/styles";
+import { API_URL } from "../constants/config";
 import { darkStyles } from "../constants/darkStyle";
-import { Prompt, promptMessages } from "../prompts/prompts";
+import { styles } from "../constants/styles";
 import { AuthContext } from "../contexts/authcontext";
-const CHAT_API_URL = "http://127.0.0.1:8000/chat";
-const UPDATE_API_URL = "http://127.0.0.1:8000/update-conversation";
+import { Prompt, promptMessages } from "../prompts/prompts";
+const CHAT_API_URL = API_URL + "/chat";
+const UPDATE_API_URL = API_URL + "/update-conversation";
 
 export default function HomeScreen({ selectedTheme, onThemeChange }) {
   const [messages, setMessages] = useState([]);

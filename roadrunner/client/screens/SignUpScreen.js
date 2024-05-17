@@ -1,17 +1,11 @@
-import React, { useState, useContext } from "react";
-import {
-  View,
-  Text,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
-import { StatusBar } from "expo-status-bar";
-import Animated, { FadeIn, FadeInUp, FadeOut } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
-import { AuthContext } from "../contexts/authcontext";
 import axios from "axios";
+import { StatusBar } from "expo-status-bar";
+import React, { useContext, useState } from "react";
+import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import Animated, { FadeInUp } from "react-native-reanimated";
+import { API_URL } from "../constants/config";
+import { AuthContext } from "../contexts/authcontext";
 
 const SIGNUP_API_URL = "http://127.0.0.1:8000/signup";
 
@@ -30,14 +24,14 @@ export default function SignUpScreen() {
       const response = await axios.post(SIGNUP_API_URL, {
         username: username,
         email: email,
-        password: password
+        password: password,
       });
-  
+
       if (response.status === 200) {
         const responseData = response.data;
         console.log("Sign Up successful");
         console.log("Response data:", responseData);
-       
+
         //set current user
         setAuth(responseData)
         navigation.navigate("Home")

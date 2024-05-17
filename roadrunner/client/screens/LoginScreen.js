@@ -10,9 +10,13 @@ import {
 import { StatusBar } from "expo-status-bar";
 import Animated, { FadeIn, FadeInUp, FadeOut } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
-import { AuthContext } from "../contexts/authcontext";
 import axios from "axios";
-import HomeScreen from "./HomeScreen";
+import { StatusBar } from "expo-status-bar";
+import React, { useContext, useState } from "react";
+import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import Animated, { FadeInUp } from "react-native-reanimated";
+import { API_URL } from "../constants/config";
+import { AuthContext } from "../contexts/authcontext";
 
 const LOGIN_API_URL = "http://127.0.0.1:8000/login";
 

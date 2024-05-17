@@ -24,7 +24,7 @@ from infra.db.schemas import (
 )
 from infra.utils import logger
 
-from ..db.db import get_db, store_message
+from ..db.db import get_db
 from ..models.llm import LLMClient
 from ..utils.oauth import get_current_active_user
 from ..db.schemas import User
@@ -62,11 +62,11 @@ async def chat(current_user: Annotated[User, Depends(get_current_active_user)], 
         "content": request.message,
     }
     relevant_records = await get_relevant_records(db, request.message)
-    # log.info(f"Relevant records: {relevant_records}")
+    log.info(f"Relevant records: {relevant_records}")
 
     messages = (
         [llm_client.get_system_message(relevant_records)]
-        + chat_messages
+        + [chat_messages]
         + [user_message]
     )
 

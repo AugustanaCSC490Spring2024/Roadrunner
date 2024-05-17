@@ -65,7 +65,7 @@ def create_conversation(
     )
     db.add(new_conversation)
     db.commit()
-    db.refresh()
+    db.refresh(new_conversation)
     return new_conversation
 
 
@@ -92,10 +92,8 @@ def add_message_to_conversation(
         log.error(f"Failed to add messages to conversation: {e}")
         raise HTTPException(status_code=500, detail="Failed to update conversation")
 
-
 def get_conversation(db: Session, conversation_id: int) -> Conversation:
     return db.query(Conversation).filter(Conversation.id == conversation_id).first()
-
 
 def get_all_conversations(db: Session) -> list[Conversation]:
     return db.query(Conversation).all()

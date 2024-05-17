@@ -26,6 +26,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
     auth,
     setAuth
   } = useContext(AuthContext);
+  
 
   const navigation = useNavigation();
 
@@ -216,6 +217,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
         onSettings={toggleSettingsPopup}
         onLogout={handleLogout}
       />
+      {/* <HistSideBar /> */}
 
       {/* Settings Popup */}
       <Settings

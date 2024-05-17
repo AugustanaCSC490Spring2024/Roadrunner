@@ -4,7 +4,7 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from roadrunner.infra.utils import logger
+from infra.utils import logger
 
 from ..db import crud, schemas
 from ..db.db import get_db

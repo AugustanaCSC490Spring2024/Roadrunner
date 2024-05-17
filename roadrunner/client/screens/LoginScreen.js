@@ -1,14 +1,3 @@
-import React, { useState, useContext, useEffect } from "react";
-import {
-  View,
-  Text,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
-import { StatusBar } from "expo-status-bar";
-import Animated, { FadeIn, FadeInUp, FadeOut } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { StatusBar } from "expo-status-bar";

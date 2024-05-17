@@ -11,6 +11,7 @@ import { darkStyles } from "../constants/darkStyle";
 import { styles } from "../constants/styles";
 import { AuthContext } from "../contexts/authcontext";
 import { Prompt, promptMessages } from "../prompts/prompts";
+import { useConversationHistory } from '../hooks/conversation';
 const CHAT_API_URL = API_URL + "/chat";
 const UPDATE_API_URL = API_URL + "/update-conversation";
 
@@ -26,6 +27,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
     auth,
     setAuth
   } = useContext(AuthContext);
+  const conversationHistory = useConversationHistory(auth)
   
 
   const navigation = useNavigation();

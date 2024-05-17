@@ -11,10 +11,10 @@ export function useConversationHistory(auth) {
                 "Content-Type": "application/json",
                 "Authorization": auth["token_type"] + " " + auth["access_token"],
             },
-        }).then(response => {
-            console.log("Fetching History")
+        }).then(async(response) => {
+            console.log("Fetching History: ", response.json())
             console.log(response.data)
-            setConversationHistory(response.data)
+            setConversationHistory(await response.json())
         }).catch(err => {
             console.log("Error: ", err)
         });

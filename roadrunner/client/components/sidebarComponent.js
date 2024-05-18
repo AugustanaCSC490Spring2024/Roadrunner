@@ -2,7 +2,7 @@ import React from "react";
 import { View, TouchableOpacity, Text, Modal, ScrollView } from "react-native";
 import { styles } from "../constants/styles";
 
-const Sidebar = ({ visible, onClose, onViewHistory, onSettings, onLogout }) => {
+const Sidebar = ({ visible, onClose, onViewHistory, onSettings, onLogout, conversationHistory }) => {
   return (
     <Modal
       animationType="slide"
@@ -16,9 +16,16 @@ const Sidebar = ({ visible, onClose, onViewHistory, onSettings, onLogout }) => {
           onPress={onClose} // Close the sidebar when overlay is pressed
         >
           <View style={styles.sidebar}>
-            <TouchableOpacity onPress={onViewHistory} style={styles.sidebarItem}>
-              <Text style={styles.sidebarItemText}>View History</Text>
-            </TouchableOpacity>
+            {
+              conversationHistory.map((eachHistory) => (
+                <TouchableOpacity onPress={onViewHistory} style={styles.sidebarItem} id={eachHistory?.id}>
+                  <Text style={styles.sidebarItemText}> {eachHistory?.context[(eachHistory?.context).length -1]?.content}</Text>
+                </TouchableOpacity>
+              ))
+            }
+
+
+
             <TouchableOpacity onPress={onSettings} style={styles.sidebarItem}>
               <Text style={styles.sidebarItemText}>Settings</Text>
             </TouchableOpacity>

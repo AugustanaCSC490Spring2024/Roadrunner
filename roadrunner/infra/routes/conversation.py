@@ -29,8 +29,8 @@ def get_all_conversations(current_user: Annotated[schemas.User, Depends(get_curr
 
 
 @router.get("/conversations/{conversation_id}", response_model=schemas.Conversation)
-def get_conversation_by_id(conversation_id: int, db: Session = Depends(get_db)):
-    conversation = crud.get_conversation(db, conversation_id)
+def get_conversation_by_id(current_user: Annotated[schemas.User, Depends(get_current_active_user)], conversation_id: int, db: Session = Depends(get_db)):
+    conversation = crud.get_conversation(db, current_user.id, conversation_id)
     if conversation is None:
         raise HTTPException(status_code=404, detail="Conversation not found")
     return conversation

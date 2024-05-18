@@ -218,6 +218,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
         onViewHistory={handleViewHistory}
         onSettings={toggleSettingsPopup}
         onLogout={handleLogout}
+        conversationHistory={conversationHistory}
       />
       {/* <HistSideBar /> */}
 

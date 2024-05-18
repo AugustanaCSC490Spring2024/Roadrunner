@@ -56,6 +56,13 @@ class Conversation(Base):
     user = relationship("User", back_populates="conversations")
 
 
+class Message(Base):
+    __tablename__ = "message"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    context = Column(JSON, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, autoincrement=True)

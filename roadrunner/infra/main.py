@@ -24,7 +24,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 app.include_router(user_router)
 app.include_router(audio_router)
 app.include_router(chat_router)

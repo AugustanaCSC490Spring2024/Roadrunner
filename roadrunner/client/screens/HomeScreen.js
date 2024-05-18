@@ -11,6 +11,7 @@ import { darkStyles } from "../constants/darkStyle";
 import { styles } from "../constants/styles";
 import { AuthContext } from "../contexts/authcontext";
 import { Prompt, promptMessages } from "../prompts/prompts";
+import { useConversationHistory } from '../hooks/conversation';
 const CHAT_API_URL = API_URL + "/chat";
 const UPDATE_API_URL = API_URL + "/update-conversation";
 
@@ -22,7 +23,12 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [theme, setTheme] = useState("light");
   const scrollViewRef = useRef();
-  const { currentUser, setCurrentUser } = useContext(AuthContext);
+  const {
+    auth,
+    setAuth
+  } = useContext(AuthContext);
+  const conversationHistory = useConversationHistory(auth)
+  
 
   const navigation = useNavigation();
 
@@ -60,6 +66,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": auth["token_type"] + " " + auth["access_token"],
         },
         body: JSON.stringify({
           conversation_id: conversationId,
@@ -70,7 +77,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-
+      console.log("Response: ", response)
       const responseData = await response.json();
       console.log("Conversation updated successfully:", responseData.message);
     } catch (error) {
@@ -86,14 +93,15 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
         // Add user's request to messages
         const userMessage = { role: "user", content: messageContent };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
-
+        console.log("Sent messages to LLM")
+        console.log(auth["token_type"] + auth["access_token"])
         const response = await fetch(`${CHAT_API_URL}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": auth["token_type"] + " " +auth["access_token"],
           },
           body: JSON.stringify({
-            user_id: currentUser,
             conversation_id: 1,
             message: messageContent,
           }),
@@ -210,7 +218,9 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
         onViewHistory={handleViewHistory}
         onSettings={toggleSettingsPopup}
         onLogout={handleLogout}
+        conversationHistory={conversationHistory}
       />
+      {/* <HistSideBar /> */}
 
       {/* Settings Popup */}
       <Settings

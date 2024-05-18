@@ -5,10 +5,10 @@ from datetime import datetime
 import sqlalchemy
 from databases import Database
 from regex import P
-from sqlalchemy import create_engine
+from sqlalchemy import JSON, create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from .models import Capture, Conversation
+from .models import Capture, Conversation, Message
 
 DATABASE_URL = "sqlite:///./database.db"
 database = Database(DATABASE_URL)

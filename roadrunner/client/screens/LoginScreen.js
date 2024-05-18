@@ -7,29 +7,45 @@ import Animated, { FadeInUp } from "react-native-reanimated";
 import { API_URL } from "../constants/config";
 import { AuthContext } from "../contexts/authcontext";
 
-const LOGIN_API_URL = API_URL + "/login";
+const LOGIN_API_URL = "http://127.0.0.1:8000/login";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
-  const { currentUser, setCurrentUser } = useContext(AuthContext);
+  const {
+    auth,
+    setAuth
+  } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const options = {
+    method: 'POST',
+    url: 'http://127.0.0.1:8000/login',
+    params: { 'api-version': '3.0' },
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": auth["token_type"] + " "+ auth["access_token"],
+    },
+    data: 
+      {
+        username: username,
+        password: password
+      },
+  
+  };
+
+
   const handleLogin = async () => {
     try {
-      const response = await axios.post(LOGIN_API_URL, {
-        username: username,
-        password: password,
-      });
-
+      console.log("Came here for login")
+      const response = await axios.request(options);
+  
       if (response.status === 200) {
         const responseData = response.data;
-        console.log("Login successful");
-        console.log("Response data:", responseData);
 
         //set current user
-        setCurrentUser(responseData["user_id"]);
-        navigation.navigate("Home");
+        setAuth(responseData)
+        navigation.navigate("Home")
       } else {
         console.error("Login failed with status:", response.status);
         // Handle other status codes if needed

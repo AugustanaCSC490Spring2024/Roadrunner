@@ -1,10 +1,11 @@
 import json
-from typing import List
+from typing import Annotated, List
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from roadrunner.infra.utils import logger
+from infra.utils import logger
+from infra.utils.oauth import get_current_active_user
 
 from ..db import crud, schemas
 from ..db.db import get_db
@@ -23,13 +24,13 @@ def log_conversation_endpoint(
 
 
 @router.get("/conversations", response_model=List[schemas.Conversation])
-def get_all_conversations(db: Session = Depends(get_db)):
-    return crud.get_all_conversations(db)
+def get_all_conversations(current_user: Annotated[schemas.User, Depends(get_current_active_user)], db: Session = Depends(get_db)):
+    return crud.get_all_conversations_by_user(db, current_user.id)
 
 
 @router.get("/conversations/{conversation_id}", response_model=schemas.Conversation)
-def get_conversation_by_id(conversation_id: int, db: Session = Depends(get_db)):
-    conversation = crud.get_conversation(db, conversation_id)
+def get_conversation_by_id(current_user: Annotated[schemas.User, Depends(get_current_active_user)], conversation_id: int, db: Session = Depends(get_db)):
+    conversation = crud.get_conversation(db, current_user.id, conversation_id)
     if conversation is None:
         raise HTTPException(status_code=404, detail="Conversation not found")
     return conversation

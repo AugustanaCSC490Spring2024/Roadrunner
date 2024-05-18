@@ -16,7 +16,7 @@ from infra.utils import logger
 log = logger.get_logger(__name__)
 
 
-from .models import Capture, Conversation, Embedding, User
+from .models import Capture, Conversation, Embedding, User, Message
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -34,6 +34,7 @@ def fetch_user_by_email(db: Session, email: str) -> User:
 
 
 def fetch_user_by_username(db: Session, username: str) -> User:
+    print("Came here for session")
     return db.query(User).filter(User.username == username).first()
 
 
@@ -64,7 +65,7 @@ def create_conversation(
     )
     db.add(new_conversation)
     db.commit()
-    db.refresh()
+    db.refresh(new_conversation)
     return new_conversation
 
 
@@ -91,14 +92,17 @@ def add_message_to_conversation(
         log.error(f"Failed to add messages to conversation: {e}")
         raise HTTPException(status_code=500, detail="Failed to update conversation")
 
-
-def get_conversation(db: Session, conversation_id: int) -> Conversation:
-    return db.query(Conversation).filter(Conversation.id == conversation_id).first()
-
+def get_conversation(db: Session, user_id:int, conversation_id: int) -> Conversation:
+    return db.query(Conversation).filter(Conversation.user_id == user_id, Conversation.id == conversation_id).first()
 
 def get_all_conversations(db: Session) -> list[Conversation]:
     return db.query(Conversation).all()
 
+def get_all_conversations_by_user(db: Session, user_id: int) -> list:
+    return db.query(Conversation).filter(Conversation.user_id == user_id).all()
+
+def get_all_messages_by_user(db: Session, user_id: int) -> list:
+    return db.query(Message).filter(Message.user_id == user_id).all()
 
 def get_all_captures(db: Session) -> list:
     return db.query(Capture).all()

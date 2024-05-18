@@ -7,11 +7,14 @@ import Animated, { FadeInUp } from "react-native-reanimated";
 import { API_URL } from "../constants/config";
 import { AuthContext } from "../contexts/authcontext";
 
-const SIGNUP_API_URL = API_URL + "/signup";
+const SIGNUP_API_URL = "http://127.0.0.1:8000/signup";
 
 export default function SignUpScreen() {
   const navigation = useNavigation();
-  const { currentUser, setCurrentUser } = useContext(AuthContext);
+  const {
+    autb,
+    setAuth
+  } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,8 +33,9 @@ export default function SignUpScreen() {
         console.log("Response data:", responseData);
 
         //set current user
-        setCurrentUser(responseData["user_id"]);
-        navigation.navigate("Home");
+        setAuth(responseData)
+        navigation.navigate("Home")
+        
       } else {
         console.error("Sign Up failed:", response.status);
         // Handle other status codes if needed

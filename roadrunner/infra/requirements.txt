@@ -16,3 +16,4 @@ aiosqlite
 litellm
 python-multipart
 bcrypt
+python-jose

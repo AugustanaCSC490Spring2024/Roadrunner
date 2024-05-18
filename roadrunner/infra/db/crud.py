@@ -70,10 +70,10 @@ def create_conversation(
 
 
 def add_message_to_conversation(
-    db: Session, conversation_id: int, messages: list[ConversationMessage]
+    db: Session, user_id: int, conversation_id: int, messages: list[ConversationMessage]
 ) -> Conversation:
     try:
-        conversation = get_conversation(db, conversation_id)
+        conversation = get_conversation(db, user_id, conversation_id)
         if not conversation:
             raise HTTPException(status_code=404, detail="Conversation not found")
 

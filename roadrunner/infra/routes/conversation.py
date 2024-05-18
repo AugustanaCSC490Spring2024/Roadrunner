@@ -35,10 +35,14 @@ def get_conversation_by_id(current_user: Annotated[schemas.User, Depends(get_cur
         raise HTTPException(status_code=404, detail="Conversation not found")
     return conversation
 
+@router.get('/get-history', response_model=List[schemas.Conversation])
+def get_all_history(db: Session = Depends(get_db)):
+    conversation = crud.get_all_conversations(db)
+    return conversation
 
 @router.post("/update-conversation")
 async def update_conversation(
-    update_request: schemas.UpdateConversationRequest, db: Session = Depends(get_db)
+    current_user: Annotated[schemas.User, Depends(get_current_active_user)], update_request: schemas.UpdateConversationRequest, db: Session = Depends(get_db)
 ):
     """
     Update the conversation with new messages.
@@ -54,13 +58,13 @@ async def update_conversation(
     log.info(f"Conversation id: {conversation_id}")
     log.info(f"Messages: {messages}")
     try:
-        conversation = crud.get_conversation(db, conversation_id)
+        conversation = crud.get_conversation(db, current_user.id, conversation_id)
         if not conversation:
             log.error(f"No conversation found with ID {conversation_id}")
             return {"error": "Conversation not found"}, 404
 
         crud.add_message_to_conversation(
-            db=db, conversation_id=conversation_id, messages=messages
+            db=db, user_id=current_user.id, conversation_id=conversation_id, messages=messages
         )
         db.commit()
         log.info(f"Updated conversation {conversation_id} with new messages.")

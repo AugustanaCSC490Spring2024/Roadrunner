@@ -24,10 +24,7 @@ export function useConversationHistory(auth) {
     return conversationHistory;
 }
 
-export function getActiveHistory(conversationID) {
-    const [activeConversationHistory, setActiveConversationHistory] = useState([])
-
-
+export function getActiveHistory(conversationID, setMessages) {
     useEffect(() => {
         const response = async () => await fetch(`http://127.0.0.1:8000/conversations/${conversationID}`, {
             method: "GET",
@@ -36,11 +33,10 @@ export function getActiveHistory(conversationID) {
                 "Authorization": auth["token_type"] + " " + auth["access_token"],
             },
         }).then(async (response) => {
-            setActiveConversationHistory(await response.json())
-            console.log("Active history: ", activeConversationHistory)
+            setMessages(await response.json())
         }).catch(err => {
             console.log("Error: ", err)
         });
-        return activeConversationHistory;
+        return response;
     })
 }

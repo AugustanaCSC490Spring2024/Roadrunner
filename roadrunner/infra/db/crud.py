@@ -62,6 +62,7 @@ def create_conversation(
         user_id=conversation_data.user_id,
         context=conversation_data.context,
         created_at=datetime.utcnow(),
+        id=conversation_data.id,
     )
     db.add(new_conversation)
     db.commit()

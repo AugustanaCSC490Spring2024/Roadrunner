@@ -36,6 +36,7 @@ class Capture(CaptureBase):
 
 
 class ConversationBase(BaseModel):
+    id: int
     user_id: int
     created_at: Optional[datetime] = None
     context: List["ConversationMessage"] = []

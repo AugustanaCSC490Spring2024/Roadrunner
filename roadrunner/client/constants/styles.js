@@ -113,7 +113,7 @@ export const styles = StyleSheet.create({
   sidebar: {
     backgroundColor: "white",
     width: wp("60%"),
-    height: "100%",
+    height: "100vh",
     paddingTop: hp("20%"),
     paddingBottom: hp("20%"),
     paddingHorizontal: wp("5%"),
@@ -125,6 +125,9 @@ export const styles = StyleSheet.create({
   },
   sidebarItemText: {
     fontSize: 18,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
   promptContainer: {
     bottom: 0,

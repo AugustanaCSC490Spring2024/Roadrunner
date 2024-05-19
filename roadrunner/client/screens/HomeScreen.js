@@ -17,6 +17,7 @@ const UPDATE_API_URL = API_URL + "/update-conversation";
 
 export default function HomeScreen({ selectedTheme, onThemeChange }) {
   const [messages, setMessages] = useState([]);
+  const [currentActiveThreadID, setCurrentActiveThreadID] = useState(1)
   const [inputText, setInputText] = useState("");
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [showPrompts, setShowPrompts] = useState(true);
@@ -27,9 +28,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
     auth,
     setAuth
   } = useContext(AuthContext);
-  const conversationHistory = useConversationHistory(auth)
-  
-
+  const conversationHistory = useConversationHistory(auth, setSettingsVisible)
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -62,6 +61,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
 
   const updateConversation = async (conversationId, newMessages) => {
     try {
+      console.log("Current active thread ID: ", currentActiveThreadID)
       const response = await fetch(`${UPDATE_API_URL}`, {
         method: "POST",
         headers: {
@@ -69,7 +69,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
           "Authorization": auth["token_type"] + " " + auth["access_token"],
         },
         body: JSON.stringify({
-          conversation_id: conversationId,
+          conversation_id: currentActiveThreadID,
           messages: newMessages,
         }),
       });
@@ -95,6 +95,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
         setMessages((prevMessages) => [...prevMessages, userMessage]);
         console.log("Sent messages to LLM")
         console.log(auth["token_type"] + auth["access_token"])
+        console.log("current thread id: ", currentActiveThreadID)
         const response = await fetch(`${CHAT_API_URL}`, {
           method: "POST",
           headers: {
@@ -102,7 +103,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
             "Authorization": auth["token_type"] + " " +auth["access_token"],
           },
           body: JSON.stringify({
-            conversation_id: 1,
+            conversation_id: currentActiveThreadID,
             message: messageContent,
           }),
         });
@@ -116,9 +117,10 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
           .replace(/["']/g, "")
           .replace(/\s{2,}/g, " ");
         const botMessage = { role: "assistant", content: cleanedResponse };
+        console.log("Previous messages: ", messages)
         setMessages((prevMessages) => [...prevMessages, botMessage]);
         // Update conversation after sending the message
-        await updateConversation(1, [userMessage, botMessage]);
+        await updateConversation(currentActiveThreadID, [userMessage, botMessage]);
       }
     } catch (error) {
       console.error("Error fetching response:", error);
@@ -149,6 +151,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
     >
       {/* Use Header component */}
       <Header openSidebar={openSidebar} />
+      
 
       <View
         style={theme === "light" ? styles.separator : darkStyles.separator}
@@ -198,7 +201,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
           </View>
 
           {/* Render messages */}
-          {messages.map((message, index) => (
+          {messages?.map((message, index) => (
             <Message key={index} message={message} />
           ))}
         </ScrollView>
@@ -211,8 +214,8 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
         sendMessage={sendMessage}
       />
 
-      {/* Sidebar */}
-      <Sidebar
+       {/* Sidebar */}
+       <Sidebar
         visible={sidebarVisible}
         onClose={() => setSidebarVisible(false)}
         onViewHistory={handleViewHistory}
@@ -221,7 +224,10 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
         conversationHistory={conversationHistory}
         setMessages={setMessages}
         auth={auth}
+        setCurrentActiveThreadID={setCurrentActiveThreadID}
+        currentActiveThreadID={currentActiveThreadID}
       />
+
       {/* <HistSideBar /> */}
 
       {/* Settings Popup */}

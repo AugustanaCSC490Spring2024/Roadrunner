@@ -110,8 +110,8 @@ def get_all_captures(db: Session) -> list:
 
 
 # Embedding
-def create_embedding(db: Session, text: str, vector: np.ndarray) -> Embedding:
-    embedding = Embedding(text=text, vector=vector)
+def create_embedding(db: Session, user_id: int, text: str, vector: np.ndarray) -> Embedding:
+    embedding = Embedding(text=text, vector=vector, user_id=user_id)
     db.add(embedding)
     db.commit()
     return embedding
@@ -123,3 +123,6 @@ def get_all_embeddings(db: Session) -> list:
 
 def get_embedding(db: Session, text: str) -> Embedding:
     return db.query(Embedding).filter(Embedding.text == text).first()
+
+def get_all_embeddings_by_user(db: Session, user_id) -> list:
+    return db.query(Embedding).filter(user_id == user_id).all()

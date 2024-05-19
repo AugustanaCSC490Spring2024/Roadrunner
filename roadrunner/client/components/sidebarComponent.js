@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { View, TouchableOpacity, Text, Modal, ScrollView, Button } from "react-native";
+import Button from "react-bootstrap/Button";
+import { View, TouchableOpacity, Text, Modal, ScrollView} from "react-native";
 import { styles } from "../constants/styles";
 import { getActiveHistory, useConversationHistory } from "../hooks/conversation";
 
@@ -69,8 +70,8 @@ const Sidebar = ({ visible, onClose, onViewHistory, onSettings, onLogout, conver
 
 
           <View style={styles.sidebar}>
-            <TouchableOpacity style={styles.sidebarItem}>
-              <Text onClick={createNewThread}>New Conversation</Text>
+            <TouchableOpacity style={styles.sidebarItemButton}>
+              <Button variant="primary" onClick={createNewThread}>New Conversation</Button>
             </TouchableOpacity>
 
             {

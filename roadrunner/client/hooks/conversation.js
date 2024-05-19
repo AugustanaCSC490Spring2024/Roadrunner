@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 
-export function useConversationHistory(auth) {
+export function useConversationHistory(auth, setSettingsVisible) {
     const [conversationHistory, setConversationHistory] = useState([])
 
     useEffect(() => {

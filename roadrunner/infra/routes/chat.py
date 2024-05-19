@@ -45,7 +45,7 @@ async def chat(current_user: Annotated[User, Depends(get_current_active_user)], 
     if not conversation:
         log.info("No conversation found, creating new one")
         conversation = create_conversation(
-            db, ConversationCreate(user_id=current_user.id, context=[])
+            db, ConversationCreate(id=request.conversation_id, user_id=current_user.id, context=[])
         )
 
     log.info(f"Conversation id: {conversation.id}")

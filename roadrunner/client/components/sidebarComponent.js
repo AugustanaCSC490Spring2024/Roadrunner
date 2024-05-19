@@ -24,7 +24,12 @@ const Sidebar = ({ visible, onClose, onViewHistory, onSettings, onLogout, conver
       console.log("Active conversation thread: ", currentActiveThreadID)
       data = await response.json()
       console.log("Time to set messages: ", data.context)
-      setMessages(data.context)
+      if (data.context == undefined){
+        setMessages([])
+      }
+      else{
+        setMessages(data.context)
+      }
     }).catch(err => {
       console.log("Error: ", err)
     });

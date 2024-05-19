@@ -6,6 +6,7 @@ import LoginScreen from "../screens/LoginScreen";
 import SignUpScreen from "../screens/SignUpScreen";
 import AuthContextProvider from "../contexts/authcontext";
 import '../output.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Stack = createNativeStackNavigator();
 

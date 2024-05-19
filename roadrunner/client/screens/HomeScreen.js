@@ -28,7 +28,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
     auth,
     setAuth
   } = useContext(AuthContext);
-  const conversationHistory = useConversationHistory(auth)
+  const conversationHistory = useConversationHistory(auth, setSettingsVisible)
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -95,6 +95,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
         setMessages((prevMessages) => [...prevMessages, userMessage]);
         console.log("Sent messages to LLM")
         console.log(auth["token_type"] + auth["access_token"])
+        console.log("current thread id: ", currentActiveThreadID)
         const response = await fetch(`${CHAT_API_URL}`, {
           method: "POST",
           headers: {
@@ -116,6 +117,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
           .replace(/["']/g, "")
           .replace(/\s{2,}/g, " ");
         const botMessage = { role: "assistant", content: cleanedResponse };
+        console.log("Previous messages: ", messages)
         setMessages((prevMessages) => [...prevMessages, botMessage]);
         // Update conversation after sending the message
         await updateConversation(currentActiveThreadID, [userMessage, botMessage]);
@@ -199,7 +201,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
           </View>
 
           {/* Render messages */}
-          {messages.map((message, index) => (
+          {messages?.map((message, index) => (
             <Message key={index} message={message} />
           ))}
         </ScrollView>

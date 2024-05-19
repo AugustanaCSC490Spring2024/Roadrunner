@@ -13,7 +13,7 @@ export default function LoginScreen() {
   const navigation = useNavigation();
   const {
     auth,
-    setAuth
+    setAuth, currUsername, setCurrUsername
   } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -24,14 +24,14 @@ export default function LoginScreen() {
     params: { 'api-version': '3.0' },
     headers: {
       "Content-Type": "application/json",
-      "Authorization": auth["token_type"] + " "+ auth["access_token"],
+      "Authorization": auth["token_type"] + " " + auth["access_token"],
     },
-    data: 
-      {
-        username: username,
-        password: password
-      },
-  
+    data:
+    {
+      username: username,
+      password: password
+    },
+
   };
 
 
@@ -39,12 +39,13 @@ export default function LoginScreen() {
     try {
       console.log("Came here for login")
       const response = await axios.request(options);
-  
+
       if (response.status === 200) {
         const responseData = response.data;
 
         //set current user
         setAuth(responseData)
+        setCurrUsername(username)
         navigation.navigate("Home")
       } else {
         console.error("Login failed with status:", response.status);

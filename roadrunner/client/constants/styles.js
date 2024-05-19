@@ -34,6 +34,12 @@ export const styles = StyleSheet.create({
     width: 40,
     resizeMode: "contain",
   },
+  sidebarAvatar: {
+    height: 40,
+    width: 40,
+    resizeMode: "contain",
+    paddingLeft: wp("85%"),
+  },
   separator: {
     height: 10,
     backgroundColor: "transparent",

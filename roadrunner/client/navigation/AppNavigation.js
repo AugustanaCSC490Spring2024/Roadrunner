@@ -5,6 +5,7 @@ import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import SignUpScreen from "../screens/SignUpScreen";
 import AuthContextProvider from "../contexts/authcontext";
+import '../output.css';
 
 const Stack = createNativeStackNavigator();
 

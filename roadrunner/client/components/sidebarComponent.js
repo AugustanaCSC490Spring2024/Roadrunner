@@ -1,13 +1,38 @@
-import React from "react";
-import { View, TouchableOpacity, Text, Modal, ScrollView } from "react-native";
+import React, { useEffect } from "react";
+import { View, TouchableOpacity, Text, Modal, ScrollView, Button } from "react-native";
 import { styles } from "../constants/styles";
-import { getActiveHistory } from "../hooks/conversation";
+import { getActiveHistory, useConversationHistory } from "../hooks/conversation";
 
 
-const Sidebar = ({ visible, onClose, onViewHistory, onSettings, onLogout, conversationHistory, setMessages, auth }) => {
+const Sidebar = ({ visible, onClose, onViewHistory, onSettings, onLogout, conversationHistory, setMessages, auth, setCurrentActiveThreadID, currentActiveThreadID }) => {
+  res = useConversationHistory(auth);
+
+  useEffect(() => {
+    displayActiveHistory(1);
+  }, [])
+
 
   const displayActiveHistory = async (conversationID) => {
-    await fetch(`http://127.0.0.1:8000/conversations/${conversationID}`, {
+    await fetch(`http://127.0.0.1:8000/conversations/${currentActiveThreadID}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": auth["token_type"] + " " + auth["access_token"],
+      },
+    }).then(async (response) => {
+      setCurrentActiveThreadID(conversationID)
+      console.log("Active conversation thread: ", currentActiveThreadID)
+      data = await response.json()
+      console.log("Time to set messages: ", data.context)
+      setMessages(data.context)
+    }).catch(err => {
+      console.log("Error: ", err)
+    });
+  }
+
+
+  const createNewThread = async () => {
+    await fetch(`http://127.0.0.1:8000/conversations`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -15,11 +40,13 @@ const Sidebar = ({ visible, onClose, onViewHistory, onSettings, onLogout, conver
       },
     }).then(async (response) => {
       data = await response.json()
-      console.log("Time to set messages: ", data.context)
-      setMessages(data.context)
+      newID = data.length+1
+      setCurrentActiveThreadID(newID)
+      setMessages([])
     }).catch(err => {
       console.log("Error: ", err)
     });
+    
   }
 
   return (
@@ -34,11 +61,17 @@ const Sidebar = ({ visible, onClose, onViewHistory, onSettings, onLogout, conver
           style={styles.overlay} // Style for the transparent overlay
           onPress={onClose} // Close the sidebar when overlay is pressed
         >
+
+
           <View style={styles.sidebar}>
+            <TouchableOpacity style={styles.sidebarItem}>
+              <Text onClick={createNewThread}>New Conversation</Text>
+            </TouchableOpacity>
+
             {
               conversationHistory.map((eachHistory, i) => (
                 <TouchableOpacity key={i} style={styles.sidebarItem} data-id={eachHistory?.id}>
-                  <Text style={styles.sidebarItemText} onClick={() => displayActiveHistory(eachHistory?.id)} > {eachHistory?.context[(eachHistory?.context).length - 1]?.content}</Text>
+                  <Text style={styles.sidebarItemText} onClick={() => displayActiveHistory(eachHistory?.id)}> {eachHistory?.context[(eachHistory?.context).length - 1]?.content}</Text>
                 </TouchableOpacity>
               ))
             }

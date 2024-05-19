@@ -48,7 +48,7 @@ class Capture(Base):
 
 class Conversation(Base):
     __tablename__ = "conversations"
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     context = Column(JSONEncodedDict, nullable=False)

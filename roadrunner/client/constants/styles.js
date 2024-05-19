@@ -125,6 +125,9 @@ export const styles = StyleSheet.create({
   },
   sidebarItemText: {
     fontSize: 18,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
   promptContainer: {
     bottom: 0,

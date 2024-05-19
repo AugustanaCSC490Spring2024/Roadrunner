@@ -13,7 +13,6 @@ export function useConversationHistory(auth) {
             },
         }).then(async (response) => {
             setConversationHistory(await response.json())
-            console.log("History: ", conversationHistory)
         }).catch(err => {
             console.log("Error: ", err)
         });
@@ -24,7 +23,7 @@ export function useConversationHistory(auth) {
     return conversationHistory;
 }
 
-export function getActiveHistory(conversationID, setMessages) {
+export function getActiveHistory(conversationID, setMessages, auth) {
     useEffect(() => {
         const response = async () => await fetch(`http://127.0.0.1:8000/conversations/${conversationID}`, {
             method: "GET",
@@ -33,7 +32,8 @@ export function getActiveHistory(conversationID, setMessages) {
                 "Authorization": auth["token_type"] + " " + auth["access_token"],
             },
         }).then(async (response) => {
-            setMessages(await response.json())
+            res = await response.json()
+            setMessages(res.context)
         }).catch(err => {
             console.log("Error: ", err)
         });

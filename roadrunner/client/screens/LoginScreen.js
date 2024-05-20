@@ -7,31 +7,31 @@ import Animated, { FadeInUp } from "react-native-reanimated";
 import { API_URL } from "../constants/config";
 import { AuthContext } from "../contexts/authcontext";
 
-const LOGIN_API_URL = "http://127.0.0.1:8000/login";
+const LOGIN_API_URL = `${API_URL}/login`;
 
 export default function LoginScreen() {
   const navigation = useNavigation();
   const {
     auth,
-    setAuth
+    setAuth, currUsername, setCurrUsername
   } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State for showing password
 
   const options = {
     method: 'POST',
-    url: 'http://127.0.0.1:8000/login',
-    params: { 'api-version': '3.0' },
+    url: `${API_URL}/login`,
     headers: {
       "Content-Type": "application/json",
-      "Authorization": auth["token_type"] + " "+ auth["access_token"],
+      "Authorization": auth["token_type"] + " " + auth["access_token"],
     },
-    data: 
-      {
-        username: username,
-        password: password
-      },
-  
+    data:
+    {
+      username: username,
+      password: password
+    },
+
   };
 
 
@@ -39,12 +39,13 @@ export default function LoginScreen() {
     try {
       console.log("Came here for login")
       const response = await axios.request(options);
-  
+
       if (response.status === 200) {
         const responseData = response.data;
 
         //set current user
         setAuth(responseData)
+        setCurrUsername(username)
         navigation.navigate("Home")
       } else {
         console.error("Login failed with status:", response.status);
@@ -126,12 +127,24 @@ export default function LoginScreen() {
             <TextInput
               placeholder="Password"
               placeholderTextColor="white"
-              secureTextEntry
+              secureTextEntry={!showPassword}
               style={{ color: "white" }}
               value={password}
               onChangeText={setPassword}
             />
           </Animated.View>
+          <TouchableOpacity
+            onPress={() => setShowPassword(!showPassword)} // Toggle showPassword state
+            style={{
+              alignSelf: "flex-end",
+              marginRight: 10,
+              marginBottom: 10,
+            }}
+          >
+            <Text style={{ color: "gray" }}>
+              {showPassword ? "Hide Password" : "Show Password"}
+            </Text>
+          </TouchableOpacity>
 
           <TouchableOpacity
             onPress={handleLogin}
@@ -146,7 +159,7 @@ export default function LoginScreen() {
           </TouchableOpacity>
 
           <View style={{ flexDirection: "row", marginTop: 10 }}>
-            <Text style={{ color: "white" }}>Don't have an account? </Text>
+            <Text style={{ color: "black" }}>Don't have an account? </Text>
             <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
               <Text style={{ color: "#00bcd4" }}>Sign Up</Text>
             </TouchableOpacity>

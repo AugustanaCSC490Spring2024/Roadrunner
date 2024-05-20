@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { API_URL } from "../constants/config";
 
 
-export function useConversationHistory(auth, setSettingsVisible) {
+export function useConversationHistory(auth, setSideBarVisible) {
     const [conversationHistory, setConversationHistory] = useState([])
 
     useEffect(() => {
-        const response = async () => await fetch(`http://127.0.0.1:8000/conversations`, {
+        const response = async () => await fetch(`${API_URL}/conversations`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -25,7 +26,7 @@ export function useConversationHistory(auth, setSettingsVisible) {
 
 export function getActiveHistory(conversationID, setMessages, auth) {
     useEffect(() => {
-        const response = async () => await fetch(`http://127.0.0.1:8000/conversations/${conversationID}`, {
+        const response = async () => await fetch(`${API_URL}/conversations/${conversationID}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

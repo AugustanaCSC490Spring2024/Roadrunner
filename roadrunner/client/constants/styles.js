@@ -34,6 +34,12 @@ export const styles = StyleSheet.create({
     width: 40,
     resizeMode: "contain",
   },
+  sidebarAvatar: {
+    height: 40,
+    width: 40,
+    resizeMode: "contain",
+    paddingLeft: wp("85%"),
+  },
   separator: {
     height: 10,
     backgroundColor: "transparent",
@@ -112,7 +118,7 @@ export const styles = StyleSheet.create({
   },
   sidebar: {
     backgroundColor: "white",
-    width: wp("60%"),
+    width: wp("40%"),
     height: "100vh",
     paddingTop: hp("20%"),
     paddingBottom: hp("20%"),
@@ -122,6 +128,12 @@ export const styles = StyleSheet.create({
     paddingVertical: hp("1%"),
     borderBottomWidth: 1,
     borderBottomColor: "lightgray",
+  },
+  sidebarItemButton: {
+    paddingVertical: hp("1%"),
+    borderBottomWidth: 1,
+    borderBottomColor: "lightgray",
+    width: wp("20%")
   },
   sidebarItemText: {
     fontSize: 18,

@@ -4,6 +4,8 @@ from infra.utils import logger
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
+from infra.db import crud
+
 from .models import Embedding
 
 llm_client = LLMClient()
@@ -18,11 +20,11 @@ def cosine_similarity(v1, v2):
     return dot_product / (norm_v1 * norm_v2)
 
 
-async def get_relevant_records(db: Session, last_message_content, threshold=0.1):
+async def get_relevant_records(db: Session, user_id, last_message_content, threshold=0.1):
     query_vector = llm_client.generate_embeddings(last_message_content)
     # log.info(f"Query vector: {query_vector}")
 
-    embeddings_records = db.query(Embedding).all()
+    embeddings_records = crud.get_all_embeddings_by_user(db, user_id)
 
     relevant_records = []
     for record in embeddings_records:

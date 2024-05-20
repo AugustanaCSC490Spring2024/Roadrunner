@@ -26,7 +26,9 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
   const scrollViewRef = useRef();
   const {
     auth,
-    setAuth
+    setAuth,
+    currUsername,
+    setCurrUsername,
   } = useContext(AuthContext);
   const conversationHistory = useConversationHistory(auth, setSettingsVisible)
   const navigation = useNavigation();
@@ -150,7 +152,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
       style={theme === "light" ? styles.container : darkStyles.container}
     >
       {/* Use Header component */}
-      <Header openSidebar={openSidebar} />
+      <Header openSidebar={openSidebar} currUsername={currUsername}/>
       
 
       <View
@@ -226,6 +228,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
         auth={auth}
         setCurrentActiveThreadID={setCurrentActiveThreadID}
         currentActiveThreadID={currentActiveThreadID}
+        setSidebarVisible={setSidebarVisible}
       />
 
       {/* <HistSideBar /> */}

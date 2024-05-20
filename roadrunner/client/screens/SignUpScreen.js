@@ -7,7 +7,7 @@ import Animated, { FadeInUp } from "react-native-reanimated";
 import { API_URL } from "../constants/config";
 import { AuthContext } from "../contexts/authcontext";
 
-const SIGNUP_API_URL = "http://127.0.0.1:8000/signup";
+const SIGNUP_API_URL = `${API_URL}/signup`;
 
 export default function SignUpScreen() {
   const navigation = useNavigation();

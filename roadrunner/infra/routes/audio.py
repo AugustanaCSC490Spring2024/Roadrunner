@@ -50,7 +50,7 @@ async def process_audio(
         audio_path = await save_audio_file(audio)
         transcription = audio_to_text(audio_path, plain=True)
         embeddings = llm_client.generate_embeddings(transcription)
-        create_embedding(db, text=transcription["text"], vector=embeddings)
+        create_embedding(db, user_id=db_user.id, text=transcription["text"], vector=embeddings)
         metadata = {"file_name": audio.filename, "recorded_at": datetime.utcnow()}
 
         # creating text file and save to assets folder

@@ -59,7 +59,7 @@ async def chat(current_user: Annotated[User, Depends(get_current_active_user)], 
         "role": "user",
         "content": request.message,
     }
-    relevant_records = await get_relevant_records(db, request.message)
+    relevant_records = await get_relevant_records(db, current_user.id, request.message)
     system_message = llm_client.get_system_message(relevant_records)
     if not isinstance(system_message, list):
         system_message = [system_message]

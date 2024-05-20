@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { SafeAreaView, ScrollView, View } from "react-native";
@@ -10,27 +11,24 @@ import { API_URL } from "../constants/config";
 import { darkStyles } from "../constants/darkStyle";
 import { styles } from "../constants/styles";
 import { AuthContext } from "../contexts/authcontext";
+import { useConversationHistory } from "../hooks/conversation";
 import { Prompt, promptMessages } from "../prompts/prompts";
-import { useConversationHistory, getActiveHistory } from '../hooks/conversation';
+
 const CHAT_API_URL = API_URL + "/chat";
 const UPDATE_API_URL = API_URL + "/update-conversation";
 
 export default function HomeScreen({ selectedTheme, onThemeChange }) {
   const [messages, setMessages] = useState([]);
-  const [currentActiveThreadID, setCurrentActiveThreadID] = useState(1)
+  const [currentActiveThreadID, setCurrentActiveThreadID] = useState(1);
   const [inputText, setInputText] = useState("");
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [showPrompts, setShowPrompts] = useState(true);
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [theme, setTheme] = useState("light");
   const scrollViewRef = useRef();
-  const {
-    auth,
-    setAuth,
-    currUsername,
-    setCurrUsername,
-  } = useContext(AuthContext);
-  const conversationHistory = useConversationHistory(auth, setSettingsVisible)
+  const { auth, setAuth, currUsername, setCurrUsername } =
+    useContext(AuthContext);
+  const conversationHistory = useConversationHistory(auth, sidebarVisible);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -40,6 +38,8 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
   const handleLogout = () => {
     console.log("User logged out");
     setSidebarVisible(false);
+    setAuth({}); // Clear auth state
+    AsyncStorage.removeItem("auth"); // Remove from storage
   };
 
   const handleViewHistory = () => {
@@ -63,12 +63,12 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
 
   const updateConversation = async (conversationId, newMessages) => {
     try {
-      console.log("Current active thread ID: ", currentActiveThreadID)
+      console.log("Current active thread ID: ", currentActiveThreadID);
       const response = await fetch(`${UPDATE_API_URL}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": auth["token_type"] + " " + auth["access_token"],
+          Authorization: auth["token_type"] + " " + auth["access_token"],
         },
         body: JSON.stringify({
           conversation_id: currentActiveThreadID,
@@ -79,7 +79,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      console.log("Response: ", response)
+      console.log("Response: ", response);
       const responseData = await response.json();
       console.log("Conversation updated successfully:", responseData.message);
     } catch (error) {
@@ -95,14 +95,14 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
         // Add user's request to messages
         const userMessage = { role: "user", content: messageContent };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
-        console.log("Sent messages to LLM")
-        console.log(auth["token_type"] + auth["access_token"])
-        console.log("current thread id: ", currentActiveThreadID)
+        console.log("Sent messages to LLM");
+        console.log(auth["token_type"] + auth["access_token"]);
+        console.log("current thread id: ", currentActiveThreadID);
         const response = await fetch(`${CHAT_API_URL}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": auth["token_type"] + " " +auth["access_token"],
+            Authorization: auth["token_type"] + " " + auth["access_token"],
           },
           body: JSON.stringify({
             conversation_id: currentActiveThreadID,
@@ -119,10 +119,13 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
           .replace(/["']/g, "")
           .replace(/\s{2,}/g, " ");
         const botMessage = { role: "assistant", content: cleanedResponse };
-        console.log("Previous messages: ", messages)
+        console.log("Previous messages: ", messages);
         setMessages((prevMessages) => [...prevMessages, botMessage]);
         // Update conversation after sending the message
-        await updateConversation(currentActiveThreadID, [userMessage, botMessage]);
+        await updateConversation(currentActiveThreadID, [
+          userMessage,
+          botMessage,
+        ]);
       }
     } catch (error) {
       console.error("Error fetching response:", error);
@@ -152,8 +155,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
       style={theme === "light" ? styles.container : darkStyles.container}
     >
       {/* Use Header component */}
-      <Header openSidebar={openSidebar} currUsername={currUsername}/>
-      
+      <Header openSidebar={openSidebar} currUsername={currUsername} />
 
       <View
         style={theme === "light" ? styles.separator : darkStyles.separator}
@@ -216,8 +218,8 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
         sendMessage={sendMessage}
       />
 
-       {/* Sidebar */}
-       <Sidebar
+      {/* Sidebar */}
+      <Sidebar
         visible={sidebarVisible}
         onClose={() => setSidebarVisible(false)}
         onViewHistory={handleViewHistory}

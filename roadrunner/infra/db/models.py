@@ -81,3 +81,4 @@ class Embedding(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     vector = Column(PickleType, nullable=False)
     text = Column(String, nullable=False)
+    user_id = Column(Integer, nullable=False)

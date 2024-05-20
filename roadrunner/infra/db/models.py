@@ -48,8 +48,7 @@ class Capture(Base):
 
 class Conversation(Base):
     __tablename__ = "conversations"
-    internal_id = Column(Integer, primary_key=True, autoincrement=True, nullable=True)
-    id = Column(Integer, autoincrement=False)
+    id = Column(Integer, primary_key=True, autoincrement=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     context = Column(JSONEncodedDict, nullable=False)
@@ -63,6 +62,7 @@ class Message(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     context = Column(JSON, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
+
 
 class User(Base):
     __tablename__ = "users"

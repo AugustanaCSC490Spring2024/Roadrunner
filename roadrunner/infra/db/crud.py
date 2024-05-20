@@ -29,7 +29,6 @@ def fetch_user_by_email(db: Session, email: str) -> User:
 
 
 def fetch_user_by_username(db: Session, username: str) -> User:
-    print("Came here for session")
     return db.query(User).filter(User.username == username).first()
 
 

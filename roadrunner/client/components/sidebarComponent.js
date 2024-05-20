@@ -3,10 +3,11 @@ import Button from "react-bootstrap/Button";
 import { View, TouchableOpacity, Text, Modal, ScrollView} from "react-native";
 import { styles } from "../constants/styles";
 import { getActiveHistory, useConversationHistory } from "../hooks/conversation";
+import { API_URL } from "../constants/config";
 
 
-const Sidebar = ({ visible, onClose, onViewHistory, onSettings, onLogout, conversationHistory, setMessages, auth, setCurrentActiveThreadID, currentActiveThreadID }) => {
-  res = useConversationHistory(auth);
+const Sidebar = ({ visible, onClose, onViewHistory, onSettings, onLogout, conversationHistory, setMessages, auth, setCurrentActiveThreadID, currentActiveThreadID, setSidebarVisible }) => {
+  res = useConversationHistory(auth, setSidebarVisible);
 
   useEffect(() => {
     displayActiveHistory(1);
@@ -14,7 +15,7 @@ const Sidebar = ({ visible, onClose, onViewHistory, onSettings, onLogout, conver
 
 
   const displayActiveHistory = async (conversationID) => {
-    await fetch(`http://127.0.0.1:8000/conversations/${currentActiveThreadID}`, {
+    await fetch(`${API_URL}/conversations/${currentActiveThreadID}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -38,7 +39,7 @@ const Sidebar = ({ visible, onClose, onViewHistory, onSettings, onLogout, conver
 
 
   const createNewThread = async () => {
-    await fetch(`http://127.0.0.1:8000/conversations`, {
+    await fetch(`${API_URL}/conversations`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

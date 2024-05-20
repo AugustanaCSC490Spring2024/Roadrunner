@@ -228,6 +228,7 @@ export default function HomeScreen({ selectedTheme, onThemeChange }) {
         auth={auth}
         setCurrentActiveThreadID={setCurrentActiveThreadID}
         currentActiveThreadID={currentActiveThreadID}
+        setSidebarVisible={setSidebarVisible}
       />
 
       {/* <HistSideBar /> */}

@@ -18,7 +18,7 @@ export default function Header({ openSidebar, currUsername }) {
         />
       </TouchableOpacity>
       <TouchableOpacity style={styles.sidebarAvatar}>
-        <Avatar.Text size={35} label={currUsername[0].toUpperCase()}/>
+        <Avatar.Text size={35} label={currUsername[0]?.toUpperCase()}/>
       </TouchableOpacity>
     </View>
   );

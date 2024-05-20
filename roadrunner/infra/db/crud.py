@@ -6,12 +6,13 @@ from fastapi import HTTPException
 from infra.db.schemas import ConversationBase, ConversationCreate, ConversationMessage
 from infra.utils import logger
 from passlib.context import CryptContext
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 log = logger.get_logger(__name__)
 
 
-from .models import Capture, Conversation, Embedding, Message, User
+from .models import Capture, Conversation, Embedding, User
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -48,7 +49,7 @@ def create_capture(db: Session, capture_data) -> Capture:
 
 
 # Conversation
-def create_conversation(
+def create_conversation_with_id(
     db: Session, conversation_data: ConversationCreate
 ) -> Conversation:
     log.info(f"Creating new conversation with data: {conversation_data}")
@@ -104,10 +105,6 @@ def get_all_conversations_by_user(db: Session, user_id: int) -> list:
     return db.query(Conversation).filter(Conversation.user_id == user_id).all()
 
 
-def get_all_messages_by_user(db: Session, user_id: int) -> list:
-    return db.query(Message).filter(Message.user_id == user_id).all()
-
-
 def get_all_captures(db: Session) -> list:
     return db.query(Capture).all()
 
@@ -132,8 +129,12 @@ def delete_conversation(db: Session, conversation_id: int):
 
 
 # Embedding
-def create_embedding(db: Session, user_id: int, text: str, vector: np.ndarray) -> Embedding:
-    embedding = Embedding(text=text, vector=vector, user_id=user_id)
+def create_embedding(
+    db: Session, user_id: int, text: str, vector: np.ndarray, created_at: datetime
+) -> Embedding:
+    embedding = Embedding(
+        text=text, vector=vector, user_id=user_id, created_at=created_at
+    )
     db.add(embedding)
     db.commit()
     return embedding
@@ -145,6 +146,7 @@ def get_all_embeddings(db: Session) -> list:
 
 def get_embedding(db: Session, text: str) -> Embedding:
     return db.query(Embedding).filter(Embedding.text == text).first()
+
 
 def get_all_embeddings_by_user(db: Session, user_id) -> list:
     return db.query(Embedding).filter(user_id == user_id).all()

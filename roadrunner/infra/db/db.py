@@ -8,7 +8,7 @@ from regex import P
 from sqlalchemy import JSON, create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from .models import Capture, Conversation, Message
+from .models import Capture
 
 DATABASE_URL = "sqlite:///./database.db"
 database = Database(DATABASE_URL)

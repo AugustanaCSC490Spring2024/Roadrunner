@@ -2,7 +2,7 @@
 title: "Deployed backend to GCP"
 excerpt: "Our infrastructure has been containerized, and deployed to GCP to allow deployment of the app"
 coverImage: "/assets/blog/gcp/img-gcp.png"
-date: "2024-26-14"
+date: "2024-04-14"
 author:
   name: Joshua Fosu-Agyemang
   # picture: "/assets/blog/authors/tim.jpeg"

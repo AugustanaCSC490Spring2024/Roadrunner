@@ -1,7 +1,7 @@
 ---
 title: "Sidebar navigation "
 excerpt: ""
-coverImage: ""
+coverImage: "/assets/blog/side-bar/sidebar-blog.jpg"
 date: "2024-05-19"
 author:
   name: Stephen Kodua

@@ -48,20 +48,15 @@ class Capture(Base):
 
 class Conversation(Base):
     __tablename__ = "conversations"
-    id = Column(Integer, primary_key=True, autoincrement=False)
+    id = Column(Integer, autoincrement=False)  # Autoincrement only here
+    conversation_id = Column(
+        Integer, primary_key=True, autoincrement=True, nullable=True
+    )
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     context = Column(JSONEncodedDict, nullable=False)
 
     user = relationship("User", back_populates="conversations")
-
-
-class Message(Base):
-    __tablename__ = "message"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    context = Column(JSON, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
 
 
 class User(Base):
@@ -74,6 +69,7 @@ class User(Base):
 
     captures = relationship("Capture", back_populates="user")
     conversations = relationship("Conversation", back_populates="user")
+    embeddings = relationship("Embedding", back_populates="user")
 
 
 class Embedding(Base):
@@ -81,4 +77,7 @@ class Embedding(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     vector = Column(PickleType, nullable=False)
     text = Column(String, nullable=False)
-    user_id = Column(Integer, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User", back_populates="embeddings")

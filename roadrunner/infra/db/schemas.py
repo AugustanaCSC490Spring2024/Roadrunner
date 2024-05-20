@@ -13,9 +13,11 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str
 
+
 class UserLogin(BaseModel):
     username: str
     password: str
+
 
 class User(UserBase):
     id: int
@@ -47,7 +49,7 @@ class ConversationBase(BaseModel):
 
 
 class Conversation(ConversationBase):
-    id: int
+    pass
 
 
 class ConversationMessage(BaseModel):
@@ -56,15 +58,9 @@ class ConversationMessage(BaseModel):
 
 
 class ConversationCreate(ConversationBase):
-    id: Optional[int] = None
 
-
-class Conversation(ConversationBase):
-    id: int
-
-
-class ConversationCreate(ConversationBase):
-    pass
+    class Config:
+        orm_mode = True
 
 
 class UpdateConversationRequest(BaseModel):
@@ -77,7 +73,6 @@ class ChatRequest(BaseModel):
     conversation_id: Optional[int] = None
 
 
-   
 class Token(BaseModel):
     access_token: str
     token_type: str

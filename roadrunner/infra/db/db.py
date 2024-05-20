@@ -8,13 +8,16 @@ from regex import P
 from sqlalchemy import JSON, create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from .models import Capture, Conversation, Message
+from .models import Capture
 
 DATABASE_URL = "sqlite:///./database.db"
 database = Database(DATABASE_URL)
 engine = create_engine(
-    DATABASE_URL, connect_args={"check_same_thread": False}
-)  # For SQLite
+    DATABASE_URL,
+    connect_args={"check_same_thread": False},
+    pool_size=20,
+    max_overflow=0,
+)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 metadata = sqlalchemy.MetaData()

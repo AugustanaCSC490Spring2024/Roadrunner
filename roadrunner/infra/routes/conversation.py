@@ -1,10 +1,15 @@
 import json
+from datetime import datetime
 from typing import Annotated, List
 
 from fastapi import APIRouter, Depends, HTTPException
 from infra.utils import logger
 from infra.utils.oauth import get_current_active_user
+from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
+
+from roadrunner.infra.db.models import Conversation
 
 from ..db import crud, schemas
 from ..db.db import get_db
@@ -19,7 +24,7 @@ router = APIRouter()
 def log_conversation_endpoint(
     conversation_data: schemas.ConversationCreate, db: Session = Depends(get_db)
 ):
-    return crud.create_conversation(db=db, conversation_data=conversation_data)
+    return crud.create_conversation_with_id(db=db, conversation_data=conversation_data)
 
 
 @router.get("/conversations", response_model=List[schemas.Conversation])
@@ -91,3 +96,36 @@ async def update_conversation(
 @router.delete("/conversations/{conversation_id}")
 def remove_conversation(conversation_id: int, db: Session = Depends(get_db)):
     return crud.delete_conversation(db, conversation_id)
+
+
+@router.post("/conversations/new", response_model=schemas.Conversation)
+def create_conversation_with_id(
+    current_user: Annotated[schemas.User, Depends(get_current_active_user)],
+    db: Session = Depends(get_db),
+):
+    print("Creating new conversation", current_user.id)
+    try:
+        # Fetch the maximum id
+        max_id = db.query(func.max(Conversation.id)).scalar() or 0
+        log.info(f"Max id: {max_id}")
+        next_id = max_id + 1
+        new_conversation = crud.create_conversation_with_id(
+            db=db,
+            conversation_data=schemas.ConversationCreate(
+                user_id=current_user.id,
+                context=[],
+                created_at=datetime.utcnow(),
+                id=next_id,
+            ),
+        )
+        db.add(new_conversation)
+        db.commit()
+        return new_conversation
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=400, detail="Conversation with this ID already exists"
+        )
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))

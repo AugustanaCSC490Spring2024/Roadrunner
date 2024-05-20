@@ -2,10 +2,9 @@ import json
 from typing import Annotated, List
 
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-
 from infra.utils import logger
 from infra.utils.oauth import get_current_active_user
+from sqlalchemy.orm import Session
 
 from ..db import crud, schemas
 from ..db.db import get_db
@@ -24,25 +23,36 @@ def log_conversation_endpoint(
 
 
 @router.get("/conversations", response_model=List[schemas.Conversation])
-def get_all_conversations(current_user: Annotated[schemas.User, Depends(get_current_active_user)], db: Session = Depends(get_db)):
+def get_all_conversations(
+    current_user: Annotated[schemas.User, Depends(get_current_active_user)],
+    db: Session = Depends(get_db),
+):
     return crud.get_all_conversations_by_user(db, current_user.id)
 
 
 @router.get("/conversations/{conversation_id}", response_model=schemas.Conversation)
-def get_conversation_by_id(current_user: Annotated[schemas.User, Depends(get_current_active_user)], conversation_id: int, db: Session = Depends(get_db)):
+def get_conversation_by_id(
+    current_user: Annotated[schemas.User, Depends(get_current_active_user)],
+    conversation_id: int,
+    db: Session = Depends(get_db),
+):
     conversation = crud.get_conversation(db, current_user.id, conversation_id)
     if conversation is None:
         raise HTTPException(status_code=404, detail="Conversation not found")
     return conversation
 
-@router.get('/get-history', response_model=List[schemas.Conversation])
+
+@router.get("/get-history", response_model=List[schemas.Conversation])
 def get_all_history(db: Session = Depends(get_db)):
     conversation = crud.get_all_conversations(db)
     return conversation
 
+
 @router.post("/update-conversation")
 async def update_conversation(
-    current_user: Annotated[schemas.User, Depends(get_current_active_user)], update_request: schemas.UpdateConversationRequest, db: Session = Depends(get_db)
+    current_user: Annotated[schemas.User, Depends(get_current_active_user)],
+    update_request: schemas.UpdateConversationRequest,
+    db: Session = Depends(get_db),
 ):
     """
     Update the conversation with new messages.
@@ -64,7 +74,10 @@ async def update_conversation(
             return {"error": "Conversation not found"}, 404
 
         crud.add_message_to_conversation(
-            db=db, user_id=current_user.id, conversation_id=conversation_id, messages=messages
+            db=db,
+            user_id=current_user.id,
+            conversation_id=conversation_id,
+            messages=messages,
         )
         db.commit()
         log.info(f"Updated conversation {conversation_id} with new messages.")
@@ -73,3 +86,8 @@ async def update_conversation(
         db.rollback()
         log.error(f"Failed to update conversation: {str(e)}")
         return {"error": "Failed to update conversation"}, 500
+
+
+@router.delete("/conversations/{conversation_id}")
+def remove_conversation(conversation_id: int, db: Session = Depends(get_db)):
+    return crud.delete_conversation(db, conversation_id)

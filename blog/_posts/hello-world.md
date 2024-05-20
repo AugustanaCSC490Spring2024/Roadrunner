@@ -5,7 +5,6 @@ coverImage: "/assets/blog/hello-world/cover.jpg"
 date: "2024-03-05T16:25:41.964Z"
 author:
   name: Hung Tran
-  # picture: "/assets/blog/authors/tim.jpeg"
 ogImage:
   url: "/assets/blog/hello-world/cover.jpg"
 ---

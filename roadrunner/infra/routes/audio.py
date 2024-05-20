@@ -36,9 +36,14 @@ def get_embeddings(db: Session = Depends(get_db)):
 async def process_audio(
     audio: UploadFile = File(..., description="The audio file to process"),
     user_id: int = Form(..., description="The user ID associated with this audio file"),
+    recorded_at: datetime = Form(
+        ..., description="The date and time the audio was recorded"
+    ),
     db: Session = Depends(get_db),
 ) -> Dict[str, str]:
+
     print("user_id", user_id)
+    print("recorded_at", recorded_at)
     print("audio", audio)
 
     db_user = get_user(db, user_id=user_id)
@@ -50,15 +55,21 @@ async def process_audio(
         audio_path = await save_audio_file(audio)
         transcription = audio_to_text(audio_path, plain=True)
         embeddings = llm_client.generate_embeddings(transcription)
-        create_embedding(db, user_id=db_user.id, text=transcription["text"], vector=embeddings)
-        metadata = {"file_name": audio.filename, "recorded_at": datetime.utcnow()}
+        create_embedding(
+            db,
+            user_id=db_user.id,
+            text=transcription["text"],
+            vector=embeddings,
+            created_at=recorded_at,
+        )
+        metadata = {"file_name": audio.filename, "recorded_at": recorded_at}
 
         # creating text file and save to assets folder
         text_path = Path(
             os.path.join(ASSETS_PATH, "text/", f"{audio.filename}.txt")
         ).resolve()
         with open(text_path, "w", encoding="utf-8") as txt:
-            print(f"\nCreating text file ❗️ ")
+            print(f"\nCreating text file ❗️")
             txt.write(transcription["text"])
 
         await store_capture_database(

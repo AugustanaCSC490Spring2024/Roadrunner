@@ -1,10 +1,9 @@
 import numpy as np
+from infra.db import crud
 from infra.models.llm import LLMClient
 from infra.utils import logger
 from sqlalchemy import func
 from sqlalchemy.orm import Session
-
-from infra.db import crud
 
 from .models import Embedding
 
@@ -20,7 +19,9 @@ def cosine_similarity(v1, v2):
     return dot_product / (norm_v1 * norm_v2)
 
 
-async def get_relevant_records(db: Session, user_id, last_message_content, threshold=0.1):
+async def get_relevant_records(
+    db: Session, user_id, last_message_content, threshold=0.2
+):
     query_vector = llm_client.generate_embeddings(last_message_content)
     # log.info(f"Query vector: {query_vector}")
 
@@ -31,7 +32,7 @@ async def get_relevant_records(db: Session, user_id, last_message_content, thres
         # log.info(f"Record vector: {record.vector}")
         similarity = cosine_similarity(query_vector, record.vector)
         if similarity > threshold:
-            relevant_records.append(record.text)
+            relevant_records.append(record)
 
     # log.info(f"Relevant records: {relevant_records}")
 

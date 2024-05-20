@@ -14,8 +14,8 @@ setup:
 
 # Start the recording script
 start_record:
-	@$(PYTHON) $(SCRIPT)
-	@echo "Recording started."
+	@$(PYTHON) $(SCRIPT) $(ARGS)
+	@echo "Recording started with arguments: $(ARGS)"
 
 # .PHONY indicates that these targets are not files
 .PHONY: all chmod_install start_record

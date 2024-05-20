@@ -1,7 +1,7 @@
 ---
 title: "User-Bot Interactions "
 excerpt: ""
-coverImage: "/assets/blog/user-chat/chatbot.png"
+coverImage: "/assets/blog/bigram/bigram.webp"
 date: "2024-05-19"
 author:
   name: Stephen Kodua

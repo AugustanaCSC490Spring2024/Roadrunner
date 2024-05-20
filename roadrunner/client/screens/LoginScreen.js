@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { StatusBar } from "expo-status-bar";
@@ -11,42 +12,38 @@ const LOGIN_API_URL = `${API_URL}/login`;
 
 export default function LoginScreen() {
   const navigation = useNavigation();
-  const {
-    auth,
-    setAuth, currUsername, setCurrUsername
-  } = useContext(AuthContext);
+  const { auth, setAuth, currUsername, setCurrUsername } =
+    useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false); // State for showing password
 
   const options = {
-    method: 'POST',
+    method: "POST",
     url: `${API_URL}/login`,
     headers: {
       "Content-Type": "application/json",
-      "Authorization": auth["token_type"] + " " + auth["access_token"],
+      Authorization: auth["token_type"] + " " + auth["access_token"],
     },
-    data:
-    {
+    data: {
       username: username,
-      password: password
+      password: password,
     },
-
   };
-
 
   const handleLogin = async () => {
     try {
-      console.log("Came here for login")
+      console.log("Came here for login");
       const response = await axios.request(options);
 
       if (response.status === 200) {
         const responseData = response.data;
 
         //set current user
-        setAuth(responseData)
-        setCurrUsername(username)
-        navigation.navigate("Home")
+        setAuth(responseData);
+        setCurrUsername(username);
+        AsyncStorage.setItem("auth", JSON.stringify(responseData)); // Save to AsyncStorage
+        navigation.navigate("Home");
       } else {
         console.error("Login failed with status:", response.status);
         // Handle other status codes if needed

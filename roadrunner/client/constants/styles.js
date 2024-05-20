@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import {
-  widthPercentageToDP as wp,
   heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 
 // Helper function to generate border radius style
@@ -101,6 +101,9 @@ export const styles = StyleSheet.create({
     backgroundColor: "#007bff",
     ...borderRadius(25),
     padding: 10,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
   sendButtonText: {
     color: "#ffffff",
@@ -133,7 +136,7 @@ export const styles = StyleSheet.create({
     paddingVertical: hp("1%"),
     borderBottomWidth: 1,
     borderBottomColor: "lightgray",
-    width: wp("20%")
+    width: wp("20%"),
   },
   sidebarItemText: {
     fontSize: 18,
@@ -146,7 +149,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     flexWrap: "wrap",
-    marginTop: 1000, 
+    marginTop: 1000,
     paddingBottom: hp("8%"),
     marginBottom: 20,
   },
@@ -208,5 +211,4 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
-  
 });

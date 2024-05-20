@@ -1,12 +1,12 @@
 ---
 title: "Sidebar navigation "
 excerpt: ""
-coverImage: ""
+coverImage: "/assets/blog/sidebar/sidebar.webp"
 date: "2024-05-19"
 author:
   name: Stephen Kodua
 ogImage:
-  url: ""
+  url: "/assets/blog/sidebar/sidebar.webp"
 ---
 
 Users can initiate a new conversation by selecting the "Create New Conversation" tab in the sidebar. This allows them to begin a fresh interaction with the chatbot.

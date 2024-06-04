@@ -58,9 +58,7 @@ class ConversationMessage(BaseModel):
 
 
 class ConversationCreate(ConversationBase):
-
-    class Config:
-        orm_mode = True
+    pass
 
 
 class UpdateConversationRequest(BaseModel):

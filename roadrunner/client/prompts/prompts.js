@@ -1,17 +1,17 @@
 // Prompt.js
 import React from "react";
-import { TouchableOpacity, Text } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import { styles } from "../constants/styles";
 
 // Static list of prompts
 const promptMessages = [
   {
     key: "1",
-    text: "Summarize a note",
+    text: "What happened today?!",
   },
   {
     key: "2",
-    text: "Python email script",
+    text: "Summarize my day with insights.",
   },
 ];
 const Prompt = ({ prompt, onPromptPress, style }) => {

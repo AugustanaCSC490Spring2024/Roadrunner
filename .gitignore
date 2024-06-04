@@ -6,5 +6,5 @@ audio/
 **/.DS_Store
 database.db
 
-assets/
+roadrunner/assets/
 .idea/
